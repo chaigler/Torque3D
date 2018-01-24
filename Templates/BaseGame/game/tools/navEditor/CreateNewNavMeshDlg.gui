@@ -352,6 +352,8 @@ function CreateNewNavMeshDlg::create(%this)
 
    %mesh = 0;
 
+   %fileName = getSubStr($Server::MissionFile, 0, strlen($Server::MissionFile) - 4) @ "_" @ %name @ ".nav";
+   
    if(MeshMissionBounds.isStateOn())
    {
       if(!isObject(MissionGroup))
@@ -370,6 +372,7 @@ function CreateNewNavMeshDlg::create(%this)
       {
          position = %pos;
          scale = %scale;
+         fileName = %fileName;
       };
    }
    else
@@ -378,8 +381,10 @@ function CreateNewNavMeshDlg::create(%this)
       {
          position = %this-->MeshPosition.getText();
          scale = %this-->MeshScale.getText();
+         fileName = %fileName;
       };
    }
+   
    MissionGroup.add(%mesh);
    NavEditorGui.selectObject(%mesh);
 
