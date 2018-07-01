@@ -58,6 +58,7 @@ namespace Sim
    ImplementNamedSet(WayPointSet)
    ImplementNamedSet(fxReplicatorSet)
    ImplementNamedSet(fxFoliageSet)
+   ImplementNamedSet(fxSpaceDustReplicatorSet)
    ImplementNamedSet(BehaviorSet)
    ImplementNamedSet(MaterialSet)
    ImplementNamedSet(SFXSourceSet)

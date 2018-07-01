@@ -97,6 +97,7 @@ namespace Sim
    DeclareNamedSet(WayPointSet)
    DeclareNamedSet(fxReplicatorSet)
    DeclareNamedSet(fxFoliageSet)
+   DeclareNamedSet(fxSpaceDustReplicatorSet)
    DeclareNamedSet(BehaviorSet)
    DeclareNamedSet(MaterialSet)
    DeclareNamedSet(SFXSourceSet);

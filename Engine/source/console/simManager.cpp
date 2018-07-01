@@ -547,6 +547,7 @@ void init()
    InstantiateNamedSet(WayPointSet);
    InstantiateNamedSet(fxReplicatorSet);
    InstantiateNamedSet(fxFoliageSet);
+   InstantiateNamedSet(fxSpaceDustReplicatorSet);
    InstantiateNamedSet(MaterialSet);
    InstantiateNamedSet(SFXSourceSet);
    InstantiateNamedSet(SFXDescriptionSet);
