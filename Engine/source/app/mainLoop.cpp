@@ -406,169 +406,24 @@ bool StandardMainLoop::handleCommandLine( S32 argc, const char **argv )
    // Allow the window manager to process command line inputs; this is
    // done to let web plugin functionality happen in a fairly transparent way.
    PlatformWindowManager::get()->processCmdLineArgs(argc, argv);
-
+ 
    Process::handleCommandLine( argc, argv );
-
+ 
    // Set up the command line args for the console scripts...
    Con::setIntVariable("Game::argc", argc);
    U32 i;
    for (i = 0; i < argc; i++)
       Con::setVariable(avar("Game::argv%d", i), argv[i]);
-
-#ifdef TORQUE_PLAYER
-   if(argc > 2 && dStricmp(argv[1], "-project") == 0)
+ 
+   // Execute entry file if found, otherwise fail and exit the app.
+   if (Platform::isFile("./main.cs") || Platform::isFile("./main.cs.dso"))
    {
-      char playerPath[1024];
-      Platform::makeFullPathName(argv[2], playerPath, sizeof(playerPath));
-      Platform::setCurrentDirectory(playerPath);
-
-      argv += 2;
-      argc -= 2;
-
-      // Re-locate the game:/ asset mount.
-
-      Torque::FS::Unmount( "game" );
-      Torque::FS::Mount( "game", Platform::FS::createNativeFS( playerPath ) );
+       const char *entryCmd = "exec(\"./main.cs\");";
+       Con::evaluatef(entryCmd);
+       return true;
    }
-#endif
-
-   // Executes an entry script file. This is "main.cs"
-   // by default, but any file name (with no whitespace
-   // in it) may be run if it is specified as the first
-   // command-line parameter. The script used, default
-   // or otherwise, is not compiled and is loaded here
-   // directly because the resource system restricts
-   // access to the "root" directory.
-
-#ifdef TORQUE_ENABLE_VFS
-   Zip::ZipArchive *vfs = openEmbeddedVFSArchive();
-   bool useVFS = vfs != NULL;
-#endif
-
-   Stream *mainCsStream = NULL;
-
-   // The working filestream.
-   FileStream str; 
-
-   const char *defaultScriptName = "main.cs";
-   bool useDefaultScript = true;
-
-   // Check if any command-line parameters were passed (the first is just the app name).
-   if (argc > 1)
-   {
-      // If so, check if the first parameter is a file to open.
-      if ( (dStrcmp(argv[1], "") != 0 ) && (str.open(argv[1], Torque::FS::File::Read)) )
-      {
-         // If it opens, we assume it is the script to run.
-         useDefaultScript = false;
-#ifdef TORQUE_ENABLE_VFS
-         useVFS = false;
-#endif
-         mainCsStream = &str;
-      }
-   }
-
-   if (useDefaultScript)
-   {
-      bool success = false;
-
-#ifdef TORQUE_ENABLE_VFS
-      if(useVFS)
-         success = (mainCsStream = vfs->openFile(defaultScriptName, Zip::ZipArchive::Read)) != NULL;
-      else
-#endif
-         success = str.open(defaultScriptName, Torque::FS::File::Read);
-
-#if defined( TORQUE_DEBUG ) && defined (TORQUE_TOOLS) && !defined(TORQUE_DEDICATED) && !defined( _XBOX )
-      if (!success)
-      {
-         OpenFileDialog ofd;
-         FileDialogData &fdd = ofd.getData();
-         fdd.mFilters = StringTable->insert("Main Entry Script (main.cs)|main.cs|");
-         fdd.mTitle   = StringTable->insert("Locate Game Entry Script");
-
-         // Get the user's selection
-         if( !ofd.Execute() )
-            return false;
-
-         // Process and update CWD so we can run the selected main.cs
-         S32 pathLen = dStrlen( fdd.mFile );
-         FrameTemp<char> szPathCopy( pathLen + 1);
-
-         dStrcpy( szPathCopy, fdd.mFile, pathLen + 1 );
-         //forwardslash( szPathCopy );
-
-         const char *path = dStrrchr(szPathCopy, '/');
-         if(path)
-         {
-            U32 len = path - (const char*)szPathCopy;
-            szPathCopy[len+1] = 0;
-
-            Platform::setCurrentDirectory(szPathCopy);
-
-            // Re-locate the game:/ asset mount.
-
-            Torque::FS::Unmount( "game" );
-            Torque::FS::Mount( "game", Platform::FS::createNativeFS( ( const char* ) szPathCopy ) );
-
-            success = str.open(fdd.mFile, Torque::FS::File::Read);
-            if(success)
-               defaultScriptName = fdd.mFile;
-         }
-      }
-#endif
-      if( !success )
-      {
-         char msg[1024];
-         dSprintf(msg, sizeof(msg), "Failed to open \"%s\".", defaultScriptName);
-         Platform::AlertOK("Error", msg);
-#ifdef TORQUE_ENABLE_VFS
-         closeEmbeddedVFSArchive();
-#endif
-
-         return false;
-      }
-
-#ifdef TORQUE_ENABLE_VFS
-      if(! useVFS)
-#endif
-         mainCsStream = &str;
-   }
-
-   // This should rarely happen, but lets deal with
-   // it gracefully if it does.
-   if ( mainCsStream == NULL )
-      return false;
-
-   U32 size = mainCsStream->getStreamSize();
-   char *script = new char[size + 1];
-   mainCsStream->read(size, script);
-
-#ifdef TORQUE_ENABLE_VFS
-   if(useVFS)
-      vfs->closeFile(mainCsStream);
-   else
-#endif
-      str.close();
-
-   script[size] = 0;
-
-   char buffer[1024], *ptr;
-   Platform::makeFullPathName(useDefaultScript ? defaultScriptName : argv[1], buffer, sizeof(buffer), Platform::getCurrentDirectory());
-   ptr = dStrrchr(buffer, '/');
-   if(ptr != NULL)
-      *ptr = 0;
-   Platform::setMainDotCsDir(buffer);
-   Platform::setCurrentDirectory(buffer);
-
-   Con::evaluate(script, false, useDefaultScript ? defaultScriptName : argv[1]); 
-   delete[] script;
-
-#ifdef TORQUE_ENABLE_VFS
-   closeEmbeddedVFSArchive();
-#endif
-
-   return true;
+ 
+   return false;
 }
 
 bool StandardMainLoop::doMainLoop()
