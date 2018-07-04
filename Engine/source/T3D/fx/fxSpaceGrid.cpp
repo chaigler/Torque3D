@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 #include "platform/platform.h"
-#include "../source/fx/fxSpaceGrid.h"
+#include "T3D/fx/fxSpaceGrid.h"
 
 #include "gfx/gfxDevice.h"
 #include "gfx/gfxDrawUtil.h"

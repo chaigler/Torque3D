@@ -21,7 +21,7 @@
 //-----------------------------------------------------------------------------
 
 #include "platform/platform.h"
-#include "../source/fx/fxSpaceDust.h"
+#include "T3D/fx/fxSpaceDust.h"
 
 #include "gfx/gfxDevice.h"
 #include "gfx/gfxDrawUtil.h"
