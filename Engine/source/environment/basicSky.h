@@ -41,23 +41,16 @@
 #ifndef _PRIMBUILDER_H_
 #include "gfx/primBuilder.h"
 #endif
-#ifndef _LIGHTINFO_H_
-#include "lighting/lightInfo.h"
-#endif
-#ifndef _LIGHTFLAREDATA_H_
-#include "T3D/lightFlareData.h"
-#endif
 #ifndef _TRESPONSECURVE_H_
 #include "math/util/tResponseCurve.h"
 #endif
 
-class LightInfo;
 class SphereMesh;
 class TimeOfDay;
 class CubemapData;
 class MatrixSet;
 
-class BasicSky : public SceneObject, public ISceneLight
+class BasicSky : public SceneObject
 {
    typedef SceneObject Parent;
 
@@ -77,10 +70,6 @@ public:
    bool onAdd();
    void onRemove();
 
-   // ISceneLight
-   virtual void submitLights(LightManager *lm, bool staticLighting);
-   virtual LightInfo* getLight() { return mLight; }
-
    // ConsoleObject
    DECLARE_CONOBJECT(BasicSky);
    void inspectPostApply();
@@ -92,20 +81,9 @@ public:
 
    void prepRenderImage(SceneRenderState* state);
 
-   ///
-   void setAzimuth(F32 azimuth);
-   ///
-   void setElevation(F32 elevation);
-
-   ///
-   F32 getAzimuth() const { return mSunAzimuth; }
-   ///
-   F32 getElevation() const { return mSunElevation; }
-
 protected:
 
    void _render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat);
-   void _debugRender(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat);
    void _renderMoon(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat);
 
    void _initVBIB();
@@ -113,29 +91,9 @@ protected:
    void _initMoon();
    void _initCurves();
 
-   F32 _getRayleighPhase(F32 fCos2);
-   F32 _getMiePhase(F32 fCos, F32 fCos2, F32 g, F32 g2);
-   F32 _vernierScale(F32 fCos);
-
    void _generateSkyPoints();
 
-   void _getColor(const Point3F &pos, LinearColorF *outColor);
-   void _getFogColor(LinearColorF *outColor);
-   void _getAmbientColor(LinearColorF *outColor);
-   void _getSunColor(LinearColorF *outColor);
-   void _interpolateColors();
-
-   void _conformLights();
-
    void _updateTimeOfDay(TimeOfDay *timeofDay, F32 time);
-
-   // static protected field set methods
-   static bool ptSetElevation(void *object, const char *index, const char *data);
-   static bool ptSetAzimuth(void *object, const char *index, const char *data);
-
-   // SimObject.
-   virtual void _onSelected();
-   virtual void _onUnselected();
 
 protected:
 
@@ -150,62 +108,23 @@ protected:
    U32 mVertCount;
    U32 mPrimCount;
 
-  // F32 mRayleighScattering;
-   F32 mRayleighScattering4PI;
-   F32 mSunSize;
-   F32 mMieScattering;
-   F32 mMieScattering4PI;
-
-   F32 mSkyBrightness;
-   F32 mMiePhaseAssymetry;
-
    F32 mOuterRadius;
    F32 mScale;
-   LinearColorF mWavelength;
-   F32 mWavelength4[3];
-   F32 mRayleighScaleDepth;
-   F32 mMieScaleDepth;
+
+   SimObjectPtr<Sun> mSun;
 
    F32 mSphereInnerRadius;
    F32 mSphereOuterRadius;
 
-   F32 mExposure;
    F32 mNightInterpolant;
    F32 mZOffset;
 
-   VectorF mLightDir;
-   VectorF mSunDir;
-
-   F32 mSunAzimuth;
-   F32 mSunElevation;
    F32 mMoonAzimuth;
    F32 mMoonElevation;
 
    F32 mTimeOfDay;
 
-   F32 mBrightness;
-
-   LinearColorF mNightColor;
-   LinearColorF mNightFogColor;
-
-   LinearColorF mAmbientColor;   ///< Not a field
-   LinearColorF mSunColor;       ///< Not a field
-   LinearColorF mFogColor;       ///< Not a field
-
-   LinearColorF mAmbientScale;
-   LinearColorF mSunScale;
-   LinearColorF mFogScale;
-
-   LightInfo *mLight;
-
-   bool mCastShadows;
-   S32 mStaticRefreshFreq;
-   S32 mDynamicRefreshFreq;
    bool mDirty;
-
-   LightFlareData *mFlareData;
-   LightFlareState mFlareState;
-   F32 mFlareScale;
 
    String mDayCubeMapName;
    CubemapData *mDayCubeMap;
@@ -233,10 +152,8 @@ protected:
    // Shared shader constant blocks
    GFXShaderConstBufferRef mShaderConsts;
    GFXShaderConstHandle *mModelViewProjSC;
-   GFXShaderConstHandle *mMiscSC;                     // Camera height, cam height squared, scale and scale over depth.
    GFXShaderConstHandle *mSphereRadiiSC;              // Inner and out radius, and inner and outer radius squared.
    GFXShaderConstHandle *mCamPosSC;
-   GFXShaderConstHandle *mSunDirSC;
    GFXShaderConstHandle *mNightColorSC;
    GFXShaderConstHandle *mNightInterpolantAndExposureSC;
    GFXShaderConstHandle *mUseCubemapSC;

@@ -41,6 +41,7 @@
 #include "materials/baseMatInstance.h"
 #include "materials/sceneData.h"
 #include "environment/timeOfDay.h"
+#include "environment/sun.h"
 
 
 ConsoleDocClass(BasicSky,
@@ -87,47 +88,12 @@ BasicSky::BasicSky()
    mPrimCount = 0;
    mVertCount = 0;
 
-
-   // Rayleigh scattering constant.
-   mRayleighScattering = 0.0035f;
-   mRayleighScattering4PI = mRayleighScattering * 4.0f * M_PI_F;
-
-   // Mie scattering constant.
-   mMieScattering = 0.0045f;
-   mMieScattering4PI = mMieScattering * 4.0f * M_PI_F;
-
-   // Overall scatter scalar.
-   mSkyBrightness = 25.0f;
-
-   // The Mie phase asymmetry factor.
-   mMiePhaseAssymetry = -0.75f;
-
    mSphereInnerRadius = 1.0f;
    mSphereOuterRadius = 1.0f * 1.025f;
    mScale = 1.0f / (mSphereOuterRadius - mSphereInnerRadius);
 
-   // 650 nm for red
-   // 570 nm for green
-   // 475 nm for blue
-   mWavelength.set(0.650f, 0.570f, 0.475f, 0);
+   mSun = NULL;
 
-   mWavelength4[0] = mPow(mWavelength[0], 4.0f);
-   mWavelength4[1] = mPow(mWavelength[1], 4.0f);
-   mWavelength4[2] = mPow(mWavelength[2], 4.0f);
-
-   mRayleighScaleDepth = 0.25f;
-   mMieScaleDepth = 0.1f;
-
-   mAmbientColor.set(0, 0, 0, 1.0f);
-   mAmbientScale.set(1.0f, 1.0f, 1.0f, 1.0f);
-
-   mSunColor.set(0, 0, 0, 1.0f);
-   mSunScale = LinearColorF::WHITE;
-
-   mFogColor.set(0, 0, 0, 1.0f);
-   mFogScale = LinearColorF::WHITE;
-
-   mExposure = 1.0f;
    mNightInterpolant = 0;
    mZOffset = 0.0f;
 
@@ -135,25 +101,10 @@ BasicSky::BasicSky()
 
    mTimeOfDay = 0;
 
-   mSunAzimuth = 0.0f;
-   mSunElevation = 35.0f;
-
    mMoonAzimuth = 0.0f;
    mMoonElevation = 45.0f;
 
-   mBrightness = 1.0f;
-
-   mCastShadows = true;
-   mStaticRefreshFreq = 8;
-   mDynamicRefreshFreq = 8;
    mDirty = true;
-
-   mLight = LightManager::createLightInfo();
-   mLight->setType(LightInfo::Vector);
-
-   mFlareData = NULL;
-   mFlareState.clear();
-   mFlareScale = 1.0f;
 
    mDayCubeMapName = "";
    mDayCubeMap = NULL;
@@ -165,10 +116,7 @@ BasicSky::BasicSky()
    mMoonLightDir.normalize();
    mMoonLightDir = -mMoonLightDir;
    mNightCubemap = NULL;
-   mNightColor.set(0.0196078f, 0.0117647f, 0.109804f, 1.0f);
-   mNightFogColor = mNightColor;
    mUseNightCubemap = false;
-   mSunSize = 1.0f;
 
    mMoonMatInst = NULL;
 
@@ -183,7 +131,6 @@ BasicSky::BasicSky()
 
 BasicSky::~BasicSky()
 {
-   SAFE_DELETE(mLight);
    SAFE_DELETE(mMoonMatInst);
 
    dFree_aligned(mMatrixSet);
@@ -199,16 +146,30 @@ bool BasicSky::onAdd()
    if (!Parent::onAdd())
       return false;
 
-   if (isClientObject())
-      TimeOfDay::getTimeOfDayUpdateSignal().notify(this, &BasicSky::_updateTimeOfDay);
-
    setGlobalBounds();
    resetWorldBox();
+
+   Sun* pSun = new Sun;
+   if (pSun->registerObject() == false)
+   {
+      Con::warnf(ConsoleLogEntry::General, "Could not register Sun for BasicSky object!");
+      delete pSun;
+      pSun = NULL;
+   }
+   mSun = pSun;
+
+   SimGroup *missionGroup;
+   if (!Sim::findObject("MissionGroup", missionGroup))
+      Con::errorf("GuiMeshRoadEditorCtrl - could not find MissionGroup to add new Sun");
+   else
+      missionGroup->addObject(mSun);
 
    addToScene();
 
    if (isClientObject())
    {
+      TimeOfDay::getTimeOfDayUpdateSignal().notify(this, &BasicSky::_updateTimeOfDay);
+
       Sim::findObject(mDayCubeMapName, mDayCubeMap);
       _initMoon();
       Sim::findObject(mNightCubemapName, mNightCubemap);
@@ -219,94 +180,18 @@ bool BasicSky::onAdd()
 
 void BasicSky::onRemove()
 {
+   if (!mSun.isNull())
+   {
+      mSun->safeDeleteObject();
+      mSun = NULL;
+   }
+
    removeFromScene();
 
    if (isClientObject())
       TimeOfDay::getTimeOfDayUpdateSignal().remove(this, &BasicSky::_updateTimeOfDay);
 
    Parent::onRemove();
-}
-
-void BasicSky::_conformLights()
-{
-   _initCurves();
-
-   F32 val = mCurves[0].getVal(mTimeOfDay);
-   mNightInterpolant = 1.0f - val;
-
-   VectorF lightDirection;
-   F32 brightness;
-
-   // Build the light direction from the azimuth and elevation.
-   F32 yaw = mDegToRad(mClampF(mSunAzimuth, 0, 359));
-   F32 pitch = mDegToRad(mClampF(mSunElevation, -360, +360));
-   MathUtils::getVectorFromAngles(lightDirection, yaw, pitch);
-   lightDirection.normalize();
-   mSunDir = -lightDirection;
-
-   yaw = mDegToRad(mClampF(mMoonAzimuth, 0, 359));
-   pitch = mDegToRad(mClampF(mMoonElevation, -360, +360));
-   MathUtils::getVectorFromAngles(mMoonLightDir, yaw, pitch);
-   mMoonLightDir.normalize();
-   mMoonLightDir = -mMoonLightDir;
-
-   brightness = mCurves[2].getVal(mTimeOfDay);
-
-   if (mNightInterpolant >= 1.0f)
-      lightDirection = -mMoonLightDir;
-
-   mLight->setDirection(-lightDirection);
-   mLight->setBrightness(brightness * mBrightness);
-   mLightDir = lightDirection;
-
-   // Have to do interpolation
-   // after the light direction is set
-   // otherwise the sun color will be invalid.
-   _interpolateColors();
-
-   mLight->setAmbient(mAmbientColor);
-   mLight->setColor(mSunColor);
-   mLight->setCastShadows(mCastShadows);
-   mLight->setStaticRefreshFreq(mStaticRefreshFreq);
-   mLight->setDynamicRefreshFreq(mDynamicRefreshFreq);
-
-   FogData fog = getSceneManager()->getFogData();
-   fog.color = mFogColor;
-   getSceneManager()->setFogData(fog);
-}
-
-void BasicSky::submitLights(LightManager *lm, bool staticLighting)
-{
-   if (mDirty)
-   {
-      _conformLights();
-      mDirty = false;
-   }
-
-   // The sun is a special light and needs special registration.
-   lm->setSpecialLight(LightManager::slSunLightType, mLight);
-}
-
-void BasicSky::setAzimuth(F32 azimuth)
-{
-   mSunAzimuth = azimuth;
-   mDirty = true;
-   setMaskBits(TimeMask);
-}
-
-void BasicSky::setElevation(F32 elevation)
-{
-   mSunElevation = elevation;
-
-   while (elevation < 0)
-      elevation += 360.0f;
-
-   while (elevation >= 360.0f)
-      elevation -= 360.0f;
-
-   mTimeOfDay = elevation / 180.0f;
-   mDirty = true;
-   setMaskBits(TimeMask);
 }
 
 void BasicSky::inspectPostApply()
@@ -320,41 +205,12 @@ void BasicSky::initPersistFields()
    addGroup("BasicSky",
       "Only azimuth and elevation are networked fields. To trigger a full update of all other fields use the applyChanges ConsoleMethod.");
 
-   addField("skyBrightness", TypeF32, Offset(mSkyBrightness, BasicSky),
-      "Global brightness and intensity applied to the sky and objects in the level.");
-
-   addField("sunSize", TypeF32, Offset(mSunSize, BasicSky),
-      "Affects the size of the sun's disk.");
-
-   addField("rayleighScattering", TypeF32, Offset(mRayleighScattering, BasicSky),
-      "Controls how blue the atmosphere is during the day.");
-
-   addField("sunScale", TypeColorF, Offset(mSunScale, BasicSky),
-      "Modulates the directional color of sunlight.");
-
-   addField("ambientScale", TypeColorF, Offset(mAmbientScale, BasicSky),
-      "Modulates the ambient color of sunlight.");
-
-   addField("fogScale", TypeColorF, Offset(mFogScale, BasicSky),
-      "Modulates the fog color. Note that this overrides the LevelInfo.fogColor "
-      "property, so you should not use LevelInfo.fogColor if the level contains "
-      "a BasicSky object.");
-
-   addField("exposure", TypeF32, Offset(mExposure, BasicSky),
-      "Controls the contrast of the sky and sun during daytime.");
-
    addField("zOffset", TypeF32, Offset(mZOffset, BasicSky),
       "Offsets the BasicSky to avoid canvas rendering. Use 5000 or greater for the initial adjustment");
 
    endGroup("BasicSky");
 
    addGroup("Orbit");
-
-   addProtectedField("azimuth", TypeF32, Offset(mSunAzimuth, BasicSky), &BasicSky::ptSetAzimuth, &defaultProtectedGetFn,
-      "The horizontal angle of the sun measured clockwise from the positive Y world axis. This field is networked.");
-
-   addProtectedField("elevation", TypeF32, Offset(mSunElevation, BasicSky), &BasicSky::ptSetElevation, &defaultProtectedGetFn,
-      "The elevation angle of the sun above or below the horizon. This field is networked.");
 
    addField("moonAzimuth", TypeF32, Offset(mMoonAzimuth, BasicSky),
       "The horizontal angle of the moon measured clockwise from the positive Y world axis. This is not animated by time or networked.");
@@ -364,40 +220,7 @@ void BasicSky::initPersistFields()
 
    endGroup("Orbit");
 
-   // We only add the basic lighting options that all lighting
-   // systems would use... the specific lighting system options
-   // are injected at runtime by the lighting system itself.
-
-   addGroup("Lighting");
-
-   addField("castShadows", TypeBool, Offset(mCastShadows, BasicSky),
-      "Enables/disables shadows cast by objects due to BasicSky light.");
-
-   addField("staticRefreshFreq", TypeS32, Offset(mStaticRefreshFreq, BasicSky), "static shadow refresh rate (milliseconds)");
-   addField("dynamicRefreshFreq", TypeS32, Offset(mDynamicRefreshFreq, BasicSky), "dynamic shadow refresh rate (milliseconds)", AbstractClassRep::FieldFlags::FIELD_HideInInspectors);
-
-   addField("brightness", TypeF32, Offset(mBrightness, BasicSky),
-      "The brightness of the BasicSky's light object.");
-
-   endGroup("Lighting");
-
-   addGroup("Misc");
-
-   addField("flareType", TYPEID< LightFlareData >(), Offset(mFlareData, BasicSky),
-      "Datablock for the flare produced by the BasicSky.");
-
-   addField("flareScale", TypeF32, Offset(mFlareScale, BasicSky),
-      "Changes the size and intensity of the flare.");
-
-   endGroup("Misc");
-
    addGroup("Night");
-
-   addField("nightColor", TypeColorF, Offset(mNightColor, BasicSky),
-      "The ambient color during night. Also used for the sky color if useNightCubemap is false.");
-
-   addField("nightFogColor", TypeColorF, Offset(mNightFogColor, BasicSky),
-      "The fog color during night.");
 
    addField("moonEnabled", TypeBool, Offset(mMoonEnabled, BasicSky),
       "Enable or disable rendering of the moon sprite during night.");
@@ -422,9 +245,6 @@ void BasicSky::initPersistFields()
 
    endGroup("Night");
 
-   // Now inject any light manager specific fields.
-   LightManager::initLightFields();
-
    Parent::initPersistFields();
 }
 
@@ -434,66 +254,16 @@ U32 BasicSky::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
 
    if (stream->writeFlag(mask & TimeMask))
    {
-      stream->write(mSunAzimuth);
-      stream->write(mSunElevation);
    }
 
    if (stream->writeFlag(mask & UpdateMask))
    {
-      stream->write(mRayleighScattering);
-      mRayleighScattering4PI = mRayleighScattering * 4.0f * M_PI_F;
-
-      stream->write(mRayleighScattering4PI);
-
-      stream->write(mMieScattering);
-      mMieScattering4PI = mMieScattering * 4.0f * M_PI_F;
-
-      stream->write(mMieScattering4PI);
-
-      stream->write(mSunSize);
-
-      stream->write(mSkyBrightness);
-
-      stream->write(mMiePhaseAssymetry);
-
       stream->write(mSphereInnerRadius);
       stream->write(mSphereOuterRadius);
 
       stream->write(mScale);
 
-      stream->write(mWavelength);
-
-      stream->write(mWavelength4[0]);
-      stream->write(mWavelength4[1]);
-      stream->write(mWavelength4[2]);
-
-      stream->write(mRayleighScaleDepth);
-      stream->write(mMieScaleDepth);
-
-      stream->write(mNightColor);
-      stream->write(mNightFogColor);
-      stream->write(mAmbientScale);
-      stream->write(mSunScale);
-      stream->write(mFogScale);
-
-      stream->write(mExposure);
-
       stream->write(mZOffset);
-
-      stream->write(mBrightness);
-
-      stream->writeFlag(mCastShadows);
-      stream->write(mStaticRefreshFreq);
-      stream->write(mDynamicRefreshFreq);
-
-      stream->write(mFlareScale);
-
-      if (stream->writeFlag(mFlareData))
-      {
-         stream->writeRangedU32(mFlareData->getId(),
-            DataBlockObjectIdFirst,
-            DataBlockObjectIdLast);
-      }
 
       stream->write(mDayCubeMapName);
       stream->writeFlag(mMoonEnabled);
@@ -505,8 +275,6 @@ U32 BasicSky::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
 
       stream->write(mMoonAzimuth);
       stream->write(mMoonElevation);
-
-      mLight->packExtended(stream);
    }
 
    return retMask;
@@ -518,85 +286,16 @@ void BasicSky::unpackUpdate(NetConnection *con, BitStream *stream)
 
    if (stream->readFlag()) // TimeMask
    {
-      F32 temp = 0;
-      stream->read(&temp);
-      setAzimuth(temp);
-
-      stream->read(&temp);
-      setElevation(temp);
    }
 
    if (stream->readFlag()) // UpdateMask
    {
-      stream->read(&mRayleighScattering);
-      stream->read(&mRayleighScattering4PI);
-
-      stream->read(&mMieScattering);
-      stream->read(&mMieScattering4PI);
-
-      stream->read(&mSunSize);
-
-      stream->read(&mSkyBrightness);
-
-      stream->read(&mMiePhaseAssymetry);
-
       stream->read(&mSphereInnerRadius);
       stream->read(&mSphereOuterRadius);
 
       stream->read(&mScale);
 
-      LinearColorF tmpColor(0, 0, 0);
-
-      stream->read(&tmpColor);
-
-      stream->read(&mWavelength4[0]);
-      stream->read(&mWavelength4[1]);
-      stream->read(&mWavelength4[2]);
-
-      stream->read(&mRayleighScaleDepth);
-      stream->read(&mMieScaleDepth);
-
-      stream->read(&mNightColor);
-      stream->read(&mNightFogColor);
-      stream->read(&mAmbientScale);
-      stream->read(&mSunScale);
-      stream->read(&mFogScale);
-
-      if (tmpColor != mWavelength)
-      {
-         mWavelength = tmpColor;
-         mWavelength4[0] = mPow(mWavelength[0], 4.0f);
-         mWavelength4[1] = mPow(mWavelength[1], 4.0f);
-         mWavelength4[2] = mPow(mWavelength[2], 4.0f);
-      }
-
-      stream->read(&mExposure);
-
       stream->read(&mZOffset);
-
-      stream->read(&mBrightness);
-
-      mCastShadows = stream->readFlag();
-      stream->read(&mStaticRefreshFreq);
-      stream->read(&mDynamicRefreshFreq);
-
-      stream->read(&mFlareScale);
-
-      if (stream->readFlag())
-      {
-         SimObjectId id = stream->readRangedU32(DataBlockObjectIdFirst, DataBlockObjectIdLast);
-         LightFlareData *datablock = NULL;
-
-         if (Sim::findObject(id, datablock))
-            mFlareData = datablock;
-         else
-         {
-            con->setLastError("BasicSky::unpackUpdate() - invalid LightFlareData!");
-            mFlareData = NULL;
-         }
-      }
-      else
-         mFlareData = NULL;
 
       stream->read(&mDayCubeMapName);
       mMoonEnabled = stream->readFlag();
@@ -608,8 +307,6 @@ void BasicSky::unpackUpdate(NetConnection *con, BitStream *stream)
 
       stream->read(&mMoonAzimuth);
       stream->read(&mMoonElevation);
-
-      mLight->unpackExtended(stream);
 
       if (isProperlyAdded())
       {
@@ -637,36 +334,6 @@ void BasicSky::prepRenderImage(SceneRenderState *state)
    ri->defaultKey = 10;
    ri->defaultKey2 = 0;
    renderPass->addInst(ri);
-
-   // Debug render instance.
-   /*
-   if ( Con::getBoolVariable( "$BasicSky::debug", false ) )
-   {
-   ri = state->getRenderPass()->allocInst<ObjectRenderInst>();
-   ri->renderDelegate.bind( this, &BasicSky::_debugRender );
-   ri->type = RenderPassManager::RIT_Editor;
-   state->getRenderPass()->addInst( ri );
-   }
-   */
-
-   // Light flare effect render instance.
-   if (mFlareData && mNightInterpolant != 1.0f)
-   {
-      mFlareState.fullBrightness = mBrightness;
-      mFlareState.scale = mFlareScale;
-      mFlareState.lightInfo = mLight;
-
-      Point3F lightPos = state->getDiffuseCameraPosition() - state->getFarPlane() * mLight->getDirection() * 0.9f;
-      mFlareState.lightMat.identity();
-      mFlareState.lightMat.setPosition(lightPos);
-
-      F32 dist = (lightPos - state->getDiffuseCameraPosition()).len();
-      F32 coronaScale = 0.5f;
-      F32 screenRadius = GFX->getViewport().extent.y * coronaScale * 0.5f;
-      mFlareState.worldRadius = screenRadius * dist / state->getWorldToScreenScale().y;
-
-      mFlareData->prepRender(state, &mFlareState);
-   }
 
    // Render instances for Night effects.
    if (mNightInterpolant <= 0.0f)
@@ -719,14 +386,10 @@ bool BasicSky::_initShader()
    mShaderConsts = mShader->allocConstBuffer();
    mModelViewProjSC = mShader->getShaderConstHandle("$modelView");
 
-   // Camera height, cam height squared, scale and scale over depth.
-   mMiscSC = mShader->getShaderConstHandle("$misc");
-
    // Inner and out radius, and inner and outer radius squared.
    mSphereRadiiSC = mShader->getShaderConstHandle("$sphereRadii");
 
    mCamPosSC = mShader->getShaderConstHandle("$camPos");
-   mSunDirSC = mShader->getShaderConstHandle("$sunDir");
    mNightColorSC = mShader->getShaderConstHandle("$nightColor");
    mNightInterpolantAndExposureSC = mShader->getShaderConstHandle("$nightInterpAndExposure");
    mUseCubemapSC = mShader->getShaderConstHandle("$useCubemap");
@@ -900,8 +563,6 @@ void BasicSky::_initCurves()
 }
 void BasicSky::_updateTimeOfDay(TimeOfDay *timeOfDay, F32 time)
 {
-   setElevation(timeOfDay->getElevationDegrees());
-   setAzimuth(timeOfDay->getAzimuthDegrees());
 }
 
 void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat)
@@ -920,15 +581,7 @@ void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIns
    Point4F sphereRadii(mSphereOuterRadius, mSphereOuterRadius * mSphereOuterRadius,
       mSphereInnerRadius, mSphereInnerRadius * mSphereInnerRadius);
 
-   Point4F scatteringCoeffs(mRayleighScattering * mSkyBrightness, mRayleighScattering4PI,
-      mMieScattering * mSkyBrightness, mMieScattering4PI);
-
-   Point4F invWavelength(1.0f / mWavelength4[0],
-      1.0f / mWavelength4[1],
-      1.0f / mWavelength4[2], 1.0f);
-
    Point3F camPos(0, 0, smViewerHeight);
-   Point4F miscParams(camPos.z, camPos.z * camPos.z, mScale, mScale / mRayleighScaleDepth);
 
    Frustum frust = state->getCameraFrustum();
    frust.setFarDist(smEarthRadius + smAtmosphereRadius);
@@ -939,7 +592,7 @@ void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIns
    MatrixF xfm(true);
 
    GFX->multWorld(xfm);
-   MatrixF xform(proj);//GFX->getProjectionMatrix());
+   MatrixF xform(proj);
    xform *= GFX->getViewMatrix();
    xform *= GFX->getWorldMatrix();
 
@@ -953,12 +606,9 @@ void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIns
    xform.setPosition(xform.getPosition() - Point3F(0, 0, mZOffset));
 
    mShaderConsts->setSafe(mModelViewProjSC, xform);
-   mShaderConsts->setSafe(mMiscSC, miscParams);
    mShaderConsts->setSafe(mSphereRadiiSC, sphereRadii);
    mShaderConsts->setSafe(mCamPosSC, camPos);
-   mShaderConsts->setSafe(mSunDirSC, mSunDir);
-   mShaderConsts->setSafe(mNightColorSC, mNightColor);
-   mShaderConsts->setSafe(mNightInterpolantAndExposureSC, Point2F(mExposure, mNightInterpolant));
+   mShaderConsts->setSafe(mNightInterpolantAndExposureSC, Point2F(0.0f, mNightInterpolant));
 
    if (GFXDevice::getWireframe())
    {
@@ -998,31 +648,6 @@ void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIns
    GFX->setVertexBuffer(mVB);
 
    GFX->drawIndexedPrimitive(GFXTriangleList, 0, 0, mVertCount, 0, mPrimCount);
-}
-
-void BasicSky::_debugRender(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat)
-{
-   GFXStateBlockDesc desc;
-   desc.fillMode = GFXFillSolid;
-   desc.setBlend(false, GFXBlendOne, GFXBlendZero);
-   desc.setZReadWrite(false, false);
-   GFXStateBlockRef sb = GFX->GFX->createStateBlock(desc);
-
-   GFX->setStateBlock(sb);
-
-   PrimBuild::begin(GFXLineStrip, mSkyPoints.size());
-   PrimBuild::color3i(255, 0, 255);
-
-   for (U32 i = 0; i < mSkyPoints.size(); i++)
-   {
-      Point3F pnt = mSkyPoints[i];
-      pnt.normalize();
-      pnt *= 500;
-      pnt += state->getCameraPosition();
-      PrimBuild::vertex3fv(pnt);
-   }
-
-   PrimBuild::end();
 }
 
 void BasicSky::_renderMoon(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat)
@@ -1152,284 +777,6 @@ void BasicSky::_generateSkyPoints()
             mSkyPoints.push_back(tmpPoint);
       }
    }
-}
-
-void BasicSky::_interpolateColors()
-{
-   mFogColor.set(0, 0, 0, 0);
-   mAmbientColor.set(0, 0, 0, 0);
-   mSunColor.set(0, 0, 0, 0);
-
-   _getFogColor(&mFogColor);
-   _getAmbientColor(&mAmbientColor);
-   _getSunColor(&mSunColor);
-
-   mAmbientColor *= mAmbientScale;
-   mSunColor *= mSunScale;
-   mFogColor *= mFogScale;
-
-   mMieScattering = (mCurves[1].getVal(mTimeOfDay) * mSunSize); //Scale the size of the sun's disk
-
-   LinearColorF moonTemp = mMoonTint;
-   LinearColorF nightTemp = mNightColor;
-
-   moonTemp.interpolate(mNightColor, mMoonTint, mCurves[4].getVal(mTimeOfDay));
-   nightTemp.interpolate(mMoonTint, mNightColor, mCurves[4].getVal(mTimeOfDay));
-
-   mFogColor.interpolate(mFogColor, mNightFogColor, mCurves[3].getVal(mTimeOfDay));//mNightInterpolant );
-   mFogColor.alpha = 1.0f;
-
-   mAmbientColor.interpolate(mAmbientColor, mNightColor, mCurves[3].getVal(mTimeOfDay));//mNightInterpolant );
-   mSunColor.interpolate(mSunColor, mMoonTint, mCurves[3].getVal(mTimeOfDay));//mNightInterpolant );
-}
-
-void BasicSky::_getSunColor(LinearColorF *outColor)
-{
-   PROFILE_SCOPE(BasicSky_GetSunColor);
-
-   U32 count = 0;
-   LinearColorF tmpColor(0, 0, 0);
-   VectorF tmpVec(0, 0, 0);
-
-   tmpVec = mLightDir;
-   tmpVec.x *= smEarthRadius + smAtmosphereRadius;
-   tmpVec.y *= smEarthRadius + smAtmosphereRadius;
-   tmpVec.z *= smEarthRadius + smAtmosphereRadius;
-   tmpVec.z -= smAtmosphereRadius;
-
-   for (U32 i = 0; i < 10; i++)
-   {
-      _getColor(tmpVec, &tmpColor);
-      (*outColor) += tmpColor;
-      tmpVec.x += (smEarthRadius * 0.5f) + (smAtmosphereRadius * 0.5f);
-      count++;
-   }
-
-   if (count > 0)
-      (*outColor) /= count;
-}
-
-void BasicSky::_getAmbientColor(LinearColorF *outColor)
-{
-   PROFILE_SCOPE(BasicSky_GetAmbientColor);
-
-   LinearColorF tmpColor(0, 0, 0, 0);
-   U32 count = 0;
-
-   // Disable mieScattering for purposes of calculating the ambient color.
-   F32 oldMieScattering = mMieScattering;
-   mMieScattering = 0.0f;
-
-   for (U32 i = 0; i < mSkyPoints.size(); i++)
-   {
-      Point3F pnt(mSkyPoints[i]);
-
-      _getColor(pnt, &tmpColor);
-      (*outColor) += tmpColor;
-      count++;
-   }
-
-   if (count > 0)
-      (*outColor) /= count;
-   mMieScattering = oldMieScattering;
-}
-
-void BasicSky::_getFogColor(LinearColorF *outColor)
-{
-   PROFILE_SCOPE(BasicSky_GetFogColor);
-
-   VectorF scatterPos(0, 0, 0);
-
-   F32 sunBrightness = mSkyBrightness;
-   mSkyBrightness *= 0.25f;
-
-   F32 yaw = 0, pitch = 0, originalYaw = 0;
-   VectorF fwd(0, 1.0f, 0);
-   MathUtils::getAnglesFromVector(fwd, yaw, pitch);
-   originalYaw = yaw;
-   pitch = mDegToRad(10.0f);
-
-   LinearColorF tmpColor(0, 0, 0);
-
-   U32 i = 0;
-   for (i = 0; i < 10; i++)
-   {
-      MathUtils::getVectorFromAngles(scatterPos, yaw, pitch);
-
-      scatterPos.x *= smEarthRadius + smAtmosphereRadius;
-      scatterPos.y *= smEarthRadius + smAtmosphereRadius;
-      scatterPos.z *= smEarthRadius + smAtmosphereRadius;
-      scatterPos.y -= smEarthRadius;
-
-      _getColor(scatterPos, &tmpColor);
-      (*outColor) += tmpColor;
-
-      if (i <= 5)
-         yaw += mDegToRad(5.0f);
-      else
-      {
-         originalYaw += mDegToRad(-5.0f);
-         yaw = originalYaw;
-      }
-
-      yaw = mFmod(yaw, M_2PI_F);
-   }
-
-   if (i > 0)
-      (*outColor) /= i;
-
-   mSkyBrightness = sunBrightness;
-}
-
-F32 BasicSky::_vernierScale(F32 fCos)
-{
-   F32 x = 1.0 - fCos;
-   return 0.25f * exp(-0.00287f + x * (0.459f + x * (3.83f + x * ((-6.80f + (x * 5.25f))))));
-}
-
-F32 BasicSky::_getMiePhase(F32 fCos, F32 fCos2, F32 g, F32 g2)
-{
-   return 1.5f * ((1.0f - g2) / (2.0f + g2)) * (1.0f + fCos2) / mPow(mFabs(1.0f + g2 - 2.0f*g*fCos), 1.5f);
-}
-
-F32 BasicSky::_getRayleighPhase(F32 fCos2)
-{
-   return 0.75 + 0.75 * fCos2;
-}
-
-void BasicSky::_getColor(const Point3F &pos, LinearColorF *outColor)
-{
-   PROFILE_SCOPE(BasicSky_GetColor);
-
-   F32 scaleOverScaleDepth = mScale / mRayleighScaleDepth;
-   F32 rayleighBrightness = mRayleighScattering * mSkyBrightness;
-   F32 mieBrightness = mMieScattering * mSkyBrightness;
-
-   Point3F invWaveLength(1.0f / mWavelength4[0],
-      1.0f / mWavelength4[1],
-      1.0f / mWavelength4[2]);
-
-   Point3F v3Pos = pos / 6378000.0f;
-   v3Pos.z += mSphereInnerRadius;
-
-   Point3F newCamPos(0, 0, smViewerHeight);
-
-   VectorF v3Ray = v3Pos - newCamPos;
-   F32 fFar = v3Ray.len();
-   v3Ray / fFar;
-   v3Ray.normalizeSafe();
-
-   Point3F v3Start = newCamPos;
-   F32 fDepth = mExp(scaleOverScaleDepth * (mSphereInnerRadius - smViewerHeight));
-   F32 fStartAngle = mDot(v3Ray, v3Start);
-
-   F32 fStartOffset = fDepth * _vernierScale(fStartAngle);
-
-   F32 fSampleLength = fFar / 2.0f;
-   F32 fScaledLength = fSampleLength * mScale;
-   VectorF v3SampleRay = v3Ray * fSampleLength;
-   Point3F v3SamplePoint = v3Start + v3SampleRay * 0.5f;
-
-   Point3F v3FrontColor(0, 0, 0);
-   for (U32 i = 0; i < 2; i++)
-   {
-      F32 fHeight = v3SamplePoint.len();
-      fDepth = mExp(scaleOverScaleDepth * (mSphereInnerRadius - smViewerHeight));
-      F32 fLightAngle = mDot(mLightDir, v3SamplePoint) / fHeight;
-      F32 fCameraAngle = mDot(v3Ray, v3SamplePoint) / fHeight;
-
-      F32 fScatter = (fStartOffset + fDepth * (_vernierScale(fLightAngle) - _vernierScale(fCameraAngle)));
-      Point3F v3Attenuate(0, 0, 0);
-
-      F32 tmp = mExp(-fScatter * (invWaveLength[0] * mRayleighScattering4PI + mMieScattering4PI));
-      v3Attenuate.x = tmp;
-
-      tmp = mExp(-fScatter * (invWaveLength[1] * mRayleighScattering4PI + mMieScattering4PI));
-      v3Attenuate.y = tmp;
-
-      tmp = mExp(-fScatter * (invWaveLength[2] * mRayleighScattering4PI + mMieScattering4PI));
-      v3Attenuate.z = tmp;
-
-      v3FrontColor += v3Attenuate * (fDepth * fScaledLength);
-      v3SamplePoint += v3SampleRay;
-   }
-
-   Point3F mieColor = v3FrontColor * mieBrightness;
-   Point3F rayleighColor = v3FrontColor * (invWaveLength * rayleighBrightness);
-   Point3F v3Direction = newCamPos - v3Pos;
-   v3Direction.normalize();
-
-   F32 fCos = mDot(mLightDir, v3Direction) / v3Direction.len();
-   F32 fCos2 = fCos * fCos;
-
-   F32 g = -0.991f;
-   F32 g2 = g * g;
-   F32 miePhase = _getMiePhase(fCos, fCos2, g, g2);
-
-   Point3F color = rayleighColor + (miePhase * mieColor);
-   LinearColorF tmp(color.x, color.y, color.z, color.y);
-
-   Point3F expColor(0, 0, 0);
-   expColor.x = 1.0f - exp(-mExposure * color.x);
-   expColor.y = 1.0f - exp(-mExposure * color.y);
-   expColor.z = 1.0f - exp(-mExposure * color.z);
-
-   tmp.set(expColor.x, expColor.y, expColor.z, 1.0f);
-
-   if (!tmp.isClamped())
-   {
-      F32 len = expColor.len();
-      if (len > 0)
-         expColor /= len;
-   }
-
-   outColor->set(expColor.x, expColor.y, expColor.z, 1.0f);
-}
-
-// Static protected field set methods
-
-bool BasicSky::ptSetElevation(void *object, const char *index, const char *data)
-{
-   BasicSky *sky = static_cast<BasicSky*>(object);
-   F32 val = dAtof(data);
-
-   sky->setElevation(val);
-
-   // we already set the field
-   return false;
-}
-
-bool BasicSky::ptSetAzimuth(void *object, const char *index, const char *data)
-{
-   BasicSky *sky = static_cast<BasicSky*>(object);
-   F32 val = dAtof(data);
-
-   sky->setAzimuth(val);
-
-   // we already set the field
-   return false;
-}
-
-void BasicSky::_onSelected()
-{
-#ifdef TORQUE_DEBUG
-   // Enable debug rendering on the light.
-   if (isClientObject())
-      mLight->enableDebugRendering(true);
-#endif
-
-   Parent::_onSelected();
-}
-
-void BasicSky::_onUnselected()
-{
-#ifdef TORQUE_DEBUG
-   // Disable debug rendering on the light.
-   if (isClientObject())
-      mLight->enableDebugRendering(false);
-#endif
-
-   Parent::_onUnselected();
 }
 
 // ConsoleMethods
