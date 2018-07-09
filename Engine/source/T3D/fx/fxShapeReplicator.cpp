@@ -176,11 +176,12 @@ void fxShapeReplicator::initPersistFields()
    endGroup( "Restraints" );	// MM: Added Group Footer.
 
    addGroup( "Object Transforms" );	// MM: Added Group Header.
+      addField("UniformScale",         TypeBool,      Offset( mFieldData.mUniformScale,         fxShapeReplicator ), "Shapes will be uniformly scaled along all axes.");
       addField( "ShapeScaleMin",       TypePoint3F,   Offset( mFieldData.mShapeScaleMin,        fxShapeReplicator ), "Minimum shape scale." );
       addField( "ShapeScaleMax",       TypePoint3F,   Offset( mFieldData.mShapeScaleMax,        fxShapeReplicator ), "Maximum shape scale." );
       addField( "ShapeRotateMin",      TypePoint3F,   Offset( mFieldData.mShapeRotateMin,       fxShapeReplicator ), "Minimum shape rotation angles.");
       addField( "ShapeRotateMax",      TypePoint3F,   Offset( mFieldData.mShapeRotateMax,       fxShapeReplicator ), "Maximum shape rotation angles." );
-      addField( "OffsetZ",             TypeS32,       Offset( mFieldData.mOffsetZ,              fxShapeReplicator ), "Offset shapes by this amount vertically." );
+      addField( "OffsetZ",             TypeF32,       Offset( mFieldData.mOffsetZ,              fxShapeReplicator ), "Offset shapes by this amount vertically." );
    endGroup( "Object Transforms" );	// MM: Added Group Footer.
 
    // Initialise parents' persistent fields.
@@ -199,10 +200,10 @@ void fxShapeReplicator::CreateShapes(void)
    Point3F			ShapeEnd;
    Point3F			ShapeScale;
    EulerF			ShapeRotation;
-   QuatF			QRotation;
-   bool			CollisionResult;
+   QuatF			   QRotation;
+   bool			   CollisionResult;
    RayInfo			RayEvent;
-   TSShape*		pShape;
+   TSShape*		   pShape;
 
 
    // Don't create shapes if we are hiding replications.
@@ -294,7 +295,7 @@ void fxShapeReplicator::CreateShapes(void)
 
          // Initialise RayCast Search Start/End Positions.
          ShapeStart = ShapeEnd = ShapePosition;
-         ShapeStart.z = 2000.f;
+         ShapeStart.z = mFieldData.mPlacementBandHeight; //2000.f;
          ShapeEnd.z= -2000.f;
 
          // Is this the Server?
@@ -402,9 +403,18 @@ void fxShapeReplicator::CreateShapes(void)
       fxStatic->setTransform(XForm);
 
       // Choose a new Scale.
-      ShapeScale.set(	RandomGen.randF(mFieldData.mShapeScaleMin.x, mFieldData.mShapeScaleMax.x),
-         RandomGen.randF(mFieldData.mShapeScaleMin.y, mFieldData.mShapeScaleMax.y),
-         RandomGen.randF(mFieldData.mShapeScaleMin.z, mFieldData.mShapeScaleMax.z));
+      if (mFieldData.mUniformScale)
+      {
+         F32 scale = RandomGen.randF(mFieldData.mShapeScaleMin.x, mFieldData.mShapeScaleMax.x);
+
+         ShapeScale.set(scale, scale, scale);
+      }
+      else
+      {
+         ShapeScale.set(RandomGen.randF(mFieldData.mShapeScaleMin.x, mFieldData.mShapeScaleMax.x),
+                        RandomGen.randF(mFieldData.mShapeScaleMin.y, mFieldData.mShapeScaleMax.y),
+                        RandomGen.randF(mFieldData.mShapeScaleMin.z, mFieldData.mShapeScaleMax.z));
+      }
 
       // Set Shape Scale.
       fxStatic->setScale(ShapeScale);
@@ -687,11 +697,12 @@ U32 fxShapeReplicator::packUpdate(NetConnection * con, U32 mask, BitStream * str
       stream->writeInt(mFieldData.mInnerRadiusY, 32);					// Shapes Inner Radius Y.
       stream->writeInt(mFieldData.mOuterRadiusX, 32);					// Shapes Outer Radius X.
       stream->writeInt(mFieldData.mOuterRadiusY, 32);					// Shapes Outer Radius Y.
+      stream->writeFlag(mFieldData.mUniformScale);                // Shapes Uniform Scale 
       mathWrite(*stream, mFieldData.mShapeScaleMin);					// Shapes Scale Min.
       mathWrite(*stream, mFieldData.mShapeScaleMax);					// Shapes Scale Max.
       mathWrite(*stream, mFieldData.mShapeRotateMin);					// Shapes Rotate Min.
       mathWrite(*stream, mFieldData.mShapeRotateMax);					// Shapes Rotate Max.
-      stream->writeSignedInt(mFieldData.mOffsetZ, 32);				// Shapes Offset Z.
+      stream->write(mFieldData.mOffsetZ);				               // Shapes Offset Z.
       stream->writeFlag(mFieldData.mAllowOnTerrain);					// Allow on Terrain.
       stream->writeFlag(mFieldData.mAllowStatics);					// Allow on Statics.
       stream->writeFlag(mFieldData.mAllowOnWater);					// Allow on Water.
@@ -732,11 +743,12 @@ void fxShapeReplicator::unpackUpdate(NetConnection * con, BitStream * stream)
       mFieldData.mInnerRadiusY			= stream->readInt(32);			// Shapes Inner Radius Y.
       mFieldData.mOuterRadiusX			= stream->readInt(32);			// Shapes Outer Radius X.
       mFieldData.mOuterRadiusY			= stream->readInt(32);			// Shapes Outer Radius Y.
+      mFieldData.mUniformScale         = stream->readFlag();         // Shapes Uniform Scale
       mathRead(*stream, &mFieldData.mShapeScaleMin);						// Shapes Scale Min.
       mathRead(*stream, &mFieldData.mShapeScaleMax);						// Shapes Scale Max.
       mathRead(*stream, &mFieldData.mShapeRotateMin);						// Shapes Rotate Min.
       mathRead(*stream, &mFieldData.mShapeRotateMax);						// Shapes Rotate Max.
-      mFieldData.mOffsetZ					= stream->readSignedInt(32);	// Shapes Offset Z.
+      stream->read(&mFieldData.mOffsetZ);	                           // Shapes Offset Z.
       mFieldData.mAllowOnTerrain			= stream->readFlag();			// Allow on Terrain.
       mFieldData.mAllowStatics			= stream->readFlag();			// Allow on Statics.
       mFieldData.mAllowOnWater			= stream->readFlag();			// Allow on Water.

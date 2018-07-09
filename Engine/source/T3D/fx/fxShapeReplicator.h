@@ -127,6 +127,7 @@ public:
       StringTableEntry   mShapeFile;
       U32                mShapeCount;
       U32                mShapeRetries;
+      bool               mUniformScale;
       Point3F            mShapeScaleMin;
       Point3F            mShapeScaleMax;
       Point3F            mShapeRotateMin;
@@ -135,7 +136,7 @@ public:
       U32                mInnerRadiusY;
       U32                mOuterRadiusX;
       U32                mOuterRadiusY;
-      S32                mOffsetZ;
+      F32                mOffsetZ;
       bool              mAllowOnTerrain;
       bool              mAllowStatics;
       bool              mAllowOnWater;
@@ -147,7 +148,7 @@ public:
       bool              mHideReplications;
       bool              mShowPlacementArea;
       U32               mPlacementBandHeight;
-      LinearColorF            mPlaceAreaColour;
+      LinearColorF      mPlaceAreaColour;
 
       tagFieldData()
       {
@@ -160,7 +161,7 @@ public:
          mInnerRadiusY       = 0;
          mOuterRadiusX       = 100;
          mOuterRadiusY       = 100;
-         mOffsetZ            = 0;
+         mOffsetZ            = 0.0f;
 
          mAllowOnTerrain     = true;
          mAllowStatics       = true;
@@ -176,6 +177,7 @@ public:
          mPlacementBandHeight  = 25;
          mPlaceAreaColour      .set(0.4f, 0, 0.8f);
 
+         mUniformScale          = true;
          mShapeScaleMin         .set(1, 1, 1);
          mShapeScaleMax         .set(1, 1, 1);
          mShapeRotateMin        .set(0, 0, 0);
