@@ -85,6 +85,42 @@ const F32 BasicSky::smViewerHeight = 1.0f;
 
 BasicSky::BasicSky()
 {
+   mLightColor.set(0.7f, 0.7f, 0.7f);
+   mLightAmbient.set(0.3f, 0.3f, 0.3f);
+   mBrightness = 1.0f;
+   mSunAzimuth = 0.0f;
+   mSunElevation = 35.0f;
+   mCastShadows = true;
+   mStaticRefreshFreq = 250;
+   mDynamicRefreshFreq = 8;
+
+   mAnimateSun = false;
+   mTotalTime = 0.0f;
+   mCurrTime = 0.0f;
+   mStartAzimuth = 0.0f;
+   mEndAzimuth = 0.0f;
+   mStartElevation = 0.0f;
+   mEndElevation = 0.0f;
+
+   mLight = LightManager::createLightInfo();
+   mLight->setType(LightInfo::Vector);
+
+   mFlareData = NULL;
+   mFlareState.clear();
+   mFlareScale = 1.0f;
+
+   mCoronaEnabled = true;
+   mCoronaScale = 0.5f;
+   mCoronaTint.set(1.0f, 1.0f, 1.0f, 1.0f);
+   mCoronaUseLightColor = true;
+   mCoronaMatInst = NULL;
+
+   mMatrixSet = reinterpret_cast<MatrixSet *>(dMalloc_aligned(sizeof(MatrixSet), 16));
+   constructInPlace(mMatrixSet);
+
+   mCoronaWorldRadius = 0.0f;
+   mLightWorldPos = Point3F::Zero;
+
    mPrimCount = 0;
    mVertCount = 0;
 
@@ -92,10 +128,7 @@ BasicSky::BasicSky()
    mSphereOuterRadius = 1.0f * 1.025f;
    mScale = 1.0f / (mSphereOuterRadius - mSphereInnerRadius);
 
-   mSun = NULL;
-
-   mNightInterpolant = 0;
-   mZOffset = 0.0f;
+   mDayToNightLerpFactor = 0;
 
    mShader = NULL;
 
@@ -116,7 +149,6 @@ BasicSky::BasicSky()
    mMoonLightDir.normalize();
    mMoonLightDir = -mMoonLightDir;
    mNightCubemap = NULL;
-   mUseNightCubemap = false;
 
    mMoonMatInst = NULL;
 
@@ -132,6 +164,8 @@ BasicSky::BasicSky()
 BasicSky::~BasicSky()
 {
    SAFE_DELETE(mMoonMatInst);
+   SAFE_DELETE(mLight);
+   SAFE_DELETE(mCoronaMatInst);
 
    dFree_aligned(mMatrixSet);
 }
@@ -149,22 +183,14 @@ bool BasicSky::onAdd()
    setGlobalBounds();
    resetWorldBox();
 
-   Sun* pSun = new Sun;
-   if (pSun->registerObject() == false)
-   {
-      Con::warnf(ConsoleLogEntry::General, "Could not register Sun for BasicSky object!");
-      delete pSun;
-      pSun = NULL;
-   }
-   mSun = pSun;
-
-   SimGroup *missionGroup;
-   if (!Sim::findObject("MissionGroup", missionGroup))
-      Con::errorf("GuiMeshRoadEditorCtrl - could not find MissionGroup to add new Sun");
-   else
-      missionGroup->addObject(mSun);
-
    addToScene();
+
+   _initCorona();
+
+   // Update the light parameters.
+   _conformLights();
+
+   setProcessTick(true);
 
    if (isClientObject())
    {
@@ -180,12 +206,6 @@ bool BasicSky::onAdd()
 
 void BasicSky::onRemove()
 {
-   if (!mSun.isNull())
-   {
-      mSun->safeDeleteObject();
-      mSun = NULL;
-   }
-
    removeFromScene();
 
    if (isClientObject())
@@ -202,48 +222,90 @@ void BasicSky::inspectPostApply()
 
 void BasicSky::initPersistFields()
 {
-   addGroup("BasicSky",
-      "Only azimuth and elevation are networked fields. To trigger a full update of all other fields use the applyChanges ConsoleMethod.");
+   // We only add the basic lighting options that all lighting
+   // systems would use... the specific lighting system options
+   // are injected at runtime by the lighting system itself.
 
-   addField("zOffset", TypeF32, Offset(mZOffset, BasicSky),
-      "Offsets the BasicSky to avoid canvas rendering. Use 5000 or greater for the initial adjustment");
+   addGroup("Lighting");
+      addField("color", TypeColorF, Offset(mLightColor, BasicSky),
+         "Color shading applied to surfaces in direct contact with light source.");
 
-   endGroup("BasicSky");
+      addField("ambient", TypeColorF, Offset(mLightAmbient, BasicSky), "Color shading applied to surfaces not "
+         "in direct contact with light source, such as in the shadows or interiors.");
+
+      addField("brightness", TypeF32, Offset(mBrightness, BasicSky),
+         "Adjust the Sun's global contrast/intensity");
+
+      addField("castShadows", TypeBool, Offset(mCastShadows, BasicSky),
+         "Enables/disables shadows cast by objects due to Sun light");
+
+      addField("staticRefreshFreq", TypeS32, Offset(mStaticRefreshFreq, BasicSky), "static shadow refresh rate (milliseconds)");
+
+      addField("dynamicRefreshFreq", TypeS32, Offset(mDynamicRefreshFreq, BasicSky), "dynamic shadow refresh rate (milliseconds)", AbstractClassRep::FieldFlags::FIELD_HideInInspectors);
+   endGroup("Lighting");
+
+   addGroup("Corona");
+      addField("coronaEnabled", TypeBool, Offset(mCoronaEnabled, BasicSky),
+         "Enable or disable rendering of the corona sprite.");
+
+      addField("coronaMaterial", TypeMaterialName, Offset(mCoronaMatName, BasicSky),
+         "Texture for the corona sprite.");
+
+      addField("coronaScale", TypeF32, Offset(mCoronaScale, BasicSky),
+         "Controls size the corona sprite renders, specified as a fractional amount of the screen height.");
+
+      addField("coronaTint", TypeColorF, Offset(mCoronaTint, BasicSky),
+         "Modulates the corona sprite color ( if coronaUseLightColor is false ).");
+
+      addField("coronaUseLightColor", TypeBool, Offset(mCoronaUseLightColor, BasicSky),
+         "Modulate the corona sprite color by the color of the light ( overrides coronaTint ).");
+   endGroup("Corona");
+
+
+   addGroup("Misc");
+      addField("flareType", TYPEID< LightFlareData >(), Offset(mFlareData, BasicSky),
+         "Datablock for the flare produced by the Sun");
+
+      addField("flareScale", TypeF32, Offset(mFlareScale, BasicSky),
+         "Changes the size and intensity of the flare.");
+   endGroup("Misc");
 
    addGroup("Orbit");
+      addField("azimuth", TypeF32, Offset(mSunAzimuth, BasicSky),
+         "The horizontal angle of the sun measured clockwise from the positive Y world axis.");
 
-   addField("moonAzimuth", TypeF32, Offset(mMoonAzimuth, BasicSky),
-      "The horizontal angle of the moon measured clockwise from the positive Y world axis. This is not animated by time or networked.");
+      addField("elevation", TypeF32, Offset(mSunElevation, BasicSky),
+         "The elevation angle of the sun above or below the horizon.");
 
-   addField("moonElevation", TypeF32, Offset(mMoonElevation, BasicSky),
-      "The elevation angle of the moon above or below the horizon. This is not animated by time or networked.");
+      addField("moonAzimuth", TypeF32, Offset(mMoonAzimuth, BasicSky),
+         "The horizontal angle of the moon measured clockwise from the positive Y world axis. This is not animated by time or networked.");
 
+      addField("moonElevation", TypeF32, Offset(mMoonElevation, BasicSky),
+         "The elevation angle of the moon above or below the horizon. This is not animated by time or networked.");
    endGroup("Orbit");
 
    addGroup("Night");
+      addField("moonEnabled", TypeBool, Offset(mMoonEnabled, BasicSky),
+         "Enable or disable rendering of the moon sprite during night.");
 
-   addField("moonEnabled", TypeBool, Offset(mMoonEnabled, BasicSky),
-      "Enable or disable rendering of the moon sprite during night.");
+      addField("moonMat", TypeMaterialName, Offset(mMoonMatName, BasicSky),
+         "Material for the moon sprite.");
 
-   addField("moonMat", TypeMaterialName, Offset(mMoonMatName, BasicSky),
-      "Material for the moon sprite.");
+      addField("moonScale", TypeF32, Offset(mMoonScale, BasicSky),
+         "Controls size the moon sprite renders, specified as a fractional amount of the screen height.");
 
-   addField("moonScale", TypeF32, Offset(mMoonScale, BasicSky),
-      "Controls size the moon sprite renders, specified as a fractional amount of the screen height.");
+      addField("moonLightColor", TypeColorF, Offset(mMoonTint, BasicSky),
+         "Color of light cast by the directional light during night.");
 
-   addField("moonLightColor", TypeColorF, Offset(mMoonTint, BasicSky),
-      "Color of light cast by the directional light during night.");
+      addField("dayCubemap", TypeCubemapName, Offset(mDayCubeMapName, BasicSky),
+         "Cubemap visible during day.");
 
-   addField("useNightCubemap", TypeBool, Offset(mUseNightCubemap, BasicSky),
-      "Transition to the nightCubemap during night. If false we use nightColor.");
-
-   addField("dayCubemap", TypeCubemapName, Offset(mDayCubeMapName, BasicSky),
-      "Cubemap visible during day.");
-
-   addField("nightCubemap", TypeCubemapName, Offset(mNightCubemapName, BasicSky),
-      "Cubemap visible during night.");
-
+      addField("nightCubemap", TypeCubemapName, Offset(mNightCubemapName, BasicSky),
+         "Cubemap visible during night.");
    endGroup("Night");
+
+   // Now inject any light manager specific fields.
+   LightManager::initLightFields();
 
    Parent::initPersistFields();
 }
@@ -258,19 +320,41 @@ U32 BasicSky::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
 
    if (stream->writeFlag(mask & UpdateMask))
    {
+      stream->write(mSunAzimuth);
+      stream->write(mSunElevation);
+      stream->write(mLightColor);
+      stream->write(mLightAmbient);
+      stream->write(mBrightness);
+      stream->writeFlag(mCastShadows);
+      stream->write(mStaticRefreshFreq);
+      stream->write(mDynamicRefreshFreq);
+      stream->write(mFlareScale);
+
+      if (stream->writeFlag(mFlareData))
+      {
+         stream->writeRangedU32(mFlareData->getId(),
+            DataBlockObjectIdFirst,
+            DataBlockObjectIdLast);
+      }
+
+      stream->writeFlag(mCoronaEnabled);
+      stream->write(mCoronaMatName);
+      stream->write(mCoronaScale);
+      stream->write(mCoronaTint);
+      stream->writeFlag(mCoronaUseLightColor);
+
+      mLight->packExtended(stream);
+
       stream->write(mSphereInnerRadius);
       stream->write(mSphereOuterRadius);
 
       stream->write(mScale);
-
-      stream->write(mZOffset);
 
       stream->write(mDayCubeMapName);
       stream->writeFlag(mMoonEnabled);
       stream->write(mMoonMatName);
       stream->write(mMoonScale);
       stream->write(mMoonTint);
-      stream->writeFlag(mUseNightCubemap);
       stream->write(mNightCubemapName);
 
       stream->write(mMoonAzimuth);
@@ -290,19 +374,50 @@ void BasicSky::unpackUpdate(NetConnection *con, BitStream *stream)
 
    if (stream->readFlag()) // UpdateMask
    {
+      stream->read(&mSunAzimuth);
+      stream->read(&mSunElevation);
+      stream->read(&mLightColor);
+      stream->read(&mLightAmbient);
+      stream->read(&mBrightness);
+      mCastShadows = stream->readFlag();
+      stream->read(&mStaticRefreshFreq);
+      stream->read(&mDynamicRefreshFreq);
+      stream->read(&mFlareScale);
+
+      if (stream->readFlag())
+      {
+         SimObjectId id = stream->readRangedU32(DataBlockObjectIdFirst, DataBlockObjectIdLast);
+         LightFlareData *datablock = NULL;
+
+         if (Sim::findObject(id, datablock))
+            mFlareData = datablock;
+         else
+         {
+            con->setLastError("Sun::unpackUpdate() - invalid LightFlareData!");
+            mFlareData = NULL;
+         }
+      }
+      else
+         mFlareData = NULL;
+
+      mCoronaEnabled = stream->readFlag();
+      stream->read(&mCoronaMatName);
+      stream->read(&mCoronaScale);
+      stream->read(&mCoronaTint);
+      mCoronaUseLightColor = stream->readFlag();
+
+      mLight->unpackExtended(stream);
+
       stream->read(&mSphereInnerRadius);
       stream->read(&mSphereOuterRadius);
 
       stream->read(&mScale);
-
-      stream->read(&mZOffset);
 
       stream->read(&mDayCubeMapName);
       mMoonEnabled = stream->readFlag();
       stream->read(&mMoonMatName);
       stream->read(&mMoonScale);
       stream->read(&mMoonTint);
-      mUseNightCubemap = stream->readFlag();
       stream->read(&mNightCubemapName);
 
       stream->read(&mMoonAzimuth);
@@ -311,11 +426,56 @@ void BasicSky::unpackUpdate(NetConnection *con, BitStream *stream)
       if (isProperlyAdded())
       {
          mDirty = true;
-         Sim::findObject(mDayCubeMapName, mDayCubeMap);
+         
+         _initCorona();
+         _conformLights();
+
          _initMoon();
+         Sim::findObject(mDayCubeMapName, mDayCubeMap);
          Sim::findObject(mNightCubemapName, mNightCubemap);
       }
    }
+}
+
+void BasicSky::submitLights(LightManager *lm, bool staticLighting)
+{
+   // The sun is a special light and needs special registration.
+   lm->setSpecialLight(LightManager::slSunLightType, mLight);
+
+   _initCurves();
+}
+
+void BasicSky::advanceTime(F32 timeDelta)
+{
+   if (mAnimateSun)
+   {
+      if (mCurrTime >= mTotalTime)
+      {
+         mAnimateSun = false;
+         mCurrTime = 0.0f;
+      }
+      else
+      {
+         mCurrTime += timeDelta;
+
+         F32 fract = mCurrTime / mTotalTime;
+         F32 inverse = 1.0f - fract;
+
+         F32 newAzimuth = mStartAzimuth * inverse + mEndAzimuth * fract;
+         F32 newElevation = mStartElevation * inverse + mEndElevation * fract;
+
+         if (newAzimuth > 360.0f)
+            newAzimuth -= 360.0f;
+         if (newElevation > 360.0f)
+            newElevation -= 360.0f;
+
+         setAzimuth(newAzimuth);
+         setElevation(newElevation);
+      }
+   }
+
+   F32 val = mCurves[0].getVal(mTimeOfDay);
+   mDayToNightLerpFactor = 1.0f - val;
 }
 
 void BasicSky::prepRenderImage(SceneRenderState *state)
@@ -335,9 +495,44 @@ void BasicSky::prepRenderImage(SceneRenderState *state)
    ri->defaultKey2 = 0;
    renderPass->addInst(ri);
 
+   // Light flare effect render instance.
+   if (mFlareData && mDayToNightLerpFactor != 1.0f)
+   {
+      mFlareState.fullBrightness = mBrightness;
+      mFlareState.scale = mFlareScale;
+      mFlareState.lightInfo = mLight;
+
+      Point3F lightPos = state->getDiffuseCameraPosition() - state->getFarPlane() * mLight->getDirection() * 0.9f;
+      mFlareState.lightMat.identity();
+      mFlareState.lightMat.setPosition(lightPos);
+
+      F32 dist = (lightPos - state->getDiffuseCameraPosition()).len();
+      F32 coronaScale = 0.5f;
+      F32 screenRadius = GFX->getViewport().extent.y * coronaScale * 0.5f;
+      mFlareState.worldRadius = screenRadius * dist / state->getWorldToScreenScale().y;
+
+      mFlareData->prepRender(state, &mFlareState);
+   }
+
    // Render instances for Night effects.
-   if (mNightInterpolant <= 0.0f)
+   if (mDayToNightLerpFactor <= 0.0f)
       return;
+
+   // Render instance for Corona effect.   
+   if (mCoronaEnabled && mCoronaMatInst)
+   {
+      mMatrixSet->setSceneView(GFX->getWorldMatrix());
+      mMatrixSet->setSceneProjection(GFX->getProjectionMatrix());
+      mMatrixSet->setWorld(GFX->getWorldMatrix());
+
+      ObjectRenderInst *ri = state->getRenderPass()->allocInst<ObjectRenderInst>();
+      ri->renderDelegate.bind(this, &BasicSky::_renderCorona);
+      ri->type = RenderPassManager::RIT_Sky;
+      // Render after sky objects and before CloudLayer!
+      ri->defaultKey = 5;
+      ri->defaultKey2 = 0;
+      state->getRenderPass()->addInst(ri);
+   }
 
    // Render instance for Moon sprite.
    if (mMoonEnabled && mMoonMatInst)
@@ -356,6 +551,356 @@ void BasicSky::prepRenderImage(SceneRenderState *state)
    }
 }
 
+void BasicSky::setAzimuth(F32 azimuth)
+{
+   mSunAzimuth = azimuth;
+   _conformLights();
+   setMaskBits(UpdateMask); // TODO: Break out the masks to save bandwidth!
+}
+
+void BasicSky::setElevation(F32 elevation)
+{
+   mSunElevation = elevation;
+
+   while (elevation < 0)
+      elevation += 360.0f;
+
+   while (elevation >= 360.0f)
+      elevation -= 360.0f;
+
+   mTimeOfDay = elevation / 180.0f;
+
+   _conformLights();
+   setMaskBits(UpdateMask); // TODO: Break out the masks to save some space!
+}
+
+void BasicSky::setColor(const LinearColorF &color)
+{
+   mLightColor = color;
+   _conformLights();
+   setMaskBits(UpdateMask); // TODO: Break out the masks to save some space!
+}
+
+void BasicSky::animate(F32 duration, F32 startAzimuth, F32 endAzimuth, F32 startElevation, F32 endElevation)
+{
+   mAnimateSun = true;
+   mCurrTime = 0.0f;
+
+   mTotalTime = duration;
+
+   mStartAzimuth = startAzimuth;
+   mEndAzimuth = endAzimuth;
+   mStartElevation = startElevation;
+   mEndElevation = endElevation;
+}
+
+
+void BasicSky::_conformLights()
+{
+   // Build the light direction from the azimuth and elevation.
+   F32 yaw = mDegToRad(mClampF(mSunAzimuth, 0, 359));
+   F32 pitch = mDegToRad(mClampF(mSunElevation, -360, +360));
+   VectorF lightDirection;
+   MathUtils::getVectorFromAngles(lightDirection, yaw, pitch);
+   lightDirection.normalize();
+   mLight->setDirection(-lightDirection);
+   mLight->setBrightness(mBrightness);
+
+   // Now make sure the colors are within range.
+   mLightColor.clamp();
+   mLight->setColor(mLightColor);
+   mLightAmbient.clamp();
+   mLight->setAmbient(mLightAmbient);
+
+   // Optimization... disable shadows if the ambient and 
+   // directional color are the same.
+   bool castShadows = mLightColor != mLightAmbient && mCastShadows;
+   mLight->setCastShadows(castShadows);
+   mLight->setStaticRefreshFreq(mStaticRefreshFreq);
+   mLight->setDynamicRefreshFreq(mDynamicRefreshFreq);
+}
+
+void BasicSky::_initCorona()
+{
+   if (isServerObject())
+      return;
+
+   SAFE_DELETE(mCoronaMatInst);
+
+   if (mCoronaMatName.isNotEmpty())
+      mCoronaMatInst = MATMGR->createMatInstance(mCoronaMatName, MATMGR->getDefaultFeatures(), getGFXVertexFormat<GFXVertexPCT>());
+}
+
+
+void BasicSky::_renderMoon(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat)
+{
+   if (!mMoonMatInst)
+      return;
+
+   Point3F moonlightPosition = state->getCameraPosition() - /*mLight->getDirection()*/ mMoonLightDir * state->getFarPlane() * 0.9f;
+   F32 dist = (moonlightPosition - state->getCameraPosition()).len();
+
+   // worldRadius = screenRadius * dist / worldToScreen
+   // screenRadius = worldRadius / dist * worldToScreen
+
+   //
+   F32 screenRadius = GFX->getViewport().extent.y * mMoonScale * 0.5f;
+   F32 worldRadius = screenRadius * dist / state->getWorldToScreenScale().y;
+
+   // Calculate Billboard Radius (in world units) to be constant, independent of distance.
+   // Takes into account distance, viewport size, and specified size in editor
+
+   F32 BBRadius = worldRadius;
+
+
+   mMatrixSet->restoreSceneViewProjection();
+
+   if (state->isReflectPass())
+      mMatrixSet->setProjection(state->getSceneManager()->getNonClipProjection());
+
+   mMatrixSet->setWorld(MatrixF::Identity);
+
+   // Initialize points with basic info
+   Point3F points[4];
+   points[0] = Point3F(-BBRadius, 0.0, -BBRadius);
+   points[1] = Point3F(-BBRadius, 0.0, BBRadius);
+   points[2] = Point3F(BBRadius, 0.0, -BBRadius);
+   points[3] = Point3F(BBRadius, 0.0, BBRadius);
+
+   static const Point2F sCoords[4] =
+   {
+      Point2F(0.0f, 0.0f),
+      Point2F(0.0f, 1.0f),
+      Point2F(1.0f, 0.0f),
+      Point2F(1.0f, 1.0f)
+   };
+
+   // Get info we need to adjust points
+   const MatrixF &camView = state->getCameraTransform();
+
+   // Finalize points
+   for (S32 i = 0; i < 4; i++)
+   {
+      // align with camera
+      camView.mulV(points[i]);
+      // offset
+      points[i] += moonlightPosition;
+   }
+
+   // Vertex color.
+   LinearColorF moonVertColor(1.0f, 1.0f, 1.0f, mDayToNightLerpFactor);
+
+   // Copy points to buffer.
+
+   GFXVertexBufferHandle< GFXVertexPCT > vb;
+   vb.set(GFX, 4, GFXBufferTypeVolatile);
+   GFXVertexPCT *pVert = vb.lock();
+   if (!pVert) return;
+
+   for (S32 i = 0; i < 4; i++)
+   {
+      pVert->color.set(moonVertColor.toColorI());
+      pVert->point.set(points[i]);
+      pVert->texCoord.set(sCoords[i].x, sCoords[i].y);
+      pVert++;
+   }
+
+   vb.unlock();
+
+   // Setup SceneData struct.
+
+   SceneData sgData;
+   sgData.wireframe = GFXDevice::getWireframe();
+   sgData.visibility = 1.0f;
+
+   // Draw it
+
+   while (mMoonMatInst->setupPass(state, sgData))
+   {
+      mMoonMatInst->setTransforms(*mMatrixSet, state);
+      mMoonMatInst->setSceneInfo(state, sgData);
+
+      GFX->setVertexBuffer(vb);
+      GFX->drawPrimitive(GFXTriangleStrip, 0, 2);
+   }
+}
+
+void BasicSky::_renderCorona(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat)
+{
+   if (!mCoronaMatInst)
+      return;
+
+   mLightWorldPos = state->getCameraPosition() - mLight->getDirection() * state->getFarPlane() * 0.2f;
+   F32 dist = (mLightWorldPos - state->getCameraPosition()).len();
+
+   // worldRadius = screenRadius * dist / worldToScreen
+   // screenRadius = worldRadius / dist * worldToScreen
+
+   //
+   F32 screenRadius = GFX->getViewport().extent.y * mCoronaScale * 0.5f;
+   F32 worldRadius = screenRadius * dist / state->getWorldToScreenScale().y;
+
+   // Calculate Billboard Radius (in world units) to be constant, independent of distance.
+   // Takes into account distance, viewport size, and specified size in editor
+
+   F32 BBRadius = worldRadius;
+
+
+   mMatrixSet->restoreSceneViewProjection();
+
+   if (state->isReflectPass())
+      mMatrixSet->setProjection(state->getSceneManager()->getNonClipProjection());
+
+   mMatrixSet->setWorld(MatrixF::Identity);
+
+   // Initialize points with basic info
+   Point3F points[4];
+   points[0] = Point3F(-BBRadius, 0.0, -BBRadius);
+   points[1] = Point3F(-BBRadius, 0.0, BBRadius);
+   points[2] = Point3F(BBRadius, 0.0, -BBRadius);
+   points[3] = Point3F(BBRadius, 0.0, BBRadius);
+
+   static const Point2F sCoords[4] =
+   {
+      Point2F(0.0f, 0.0f),
+      Point2F(0.0f, 1.0f),
+      Point2F(1.0f, 0.0f),
+      Point2F(1.0f, 1.0f)
+   };
+
+   // Get info we need to adjust points
+   const MatrixF &camView = state->getCameraTransform();
+
+   // Finalize points
+   for (S32 i = 0; i < 4; i++)
+   {
+      // align with camera
+      camView.mulV(points[i]);
+      // offset
+      points[i] += mLightWorldPos;
+   }
+
+   LinearColorF vertColor;
+   if (mCoronaUseLightColor)
+      vertColor = mLightColor;
+   else
+      vertColor = mCoronaTint;
+
+   // Copy points to buffer.
+
+   GFXVertexBufferHandle< GFXVertexPCT > vb;
+   vb.set(GFX, 4, GFXBufferTypeVolatile);
+   GFXVertexPCT *pVert = vb.lock();
+   if (!pVert) return;
+
+   for (S32 i = 0; i < 4; i++)
+   {
+      pVert->color.set(vertColor.toColorI());
+      pVert->point.set(points[i]);
+      pVert->texCoord.set(sCoords[i].x, sCoords[i].y);
+      pVert++;
+   }
+
+   vb.unlock();
+
+   // Setup SceneData struct.
+
+   SceneData sgData;
+   sgData.wireframe = GFXDevice::getWireframe();
+   sgData.visibility = 1.0f;
+
+   // Draw it
+
+   while (mCoronaMatInst->setupPass(state, sgData))
+   {
+      mCoronaMatInst->setTransforms(*mMatrixSet, state);
+      mCoronaMatInst->setSceneInfo(state, sgData);
+
+      GFX->setVertexBuffer(vb);
+      GFX->drawPrimitive(GFXTriangleStrip, 0, 2);
+   }
+}
+
+/*
+void BasicSky::_renderCorona(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat)
+{
+   // Calculate Billboard Radius (in world units) to be constant, independent of distance.
+   // Takes into account distance, viewport size, and specified size in editor
+   F32 BBRadius = mCoronaWorldRadius;
+
+   mMatrixSet->restoreSceneViewProjection();
+
+   if (state->isReflectPass())
+      mMatrixSet->setProjection(state->getSceneManager()->getNonClipProjection());
+
+   //mMatrixSet->setWorld( MatrixF::Identity );
+
+   // Initialize points with basic info
+   Point3F points[4];
+   points[0] = Point3F(-BBRadius, 0.0, -BBRadius);
+   points[1] = Point3F(-BBRadius, 0.0, BBRadius);
+   points[2] = Point3F(BBRadius, 0.0, -BBRadius);
+   points[3] = Point3F(BBRadius, 0.0, BBRadius);
+
+   static const Point2F sCoords[4] =
+   {
+      Point2F(0.0f, 0.0f),
+      Point2F(0.0f, 1.0f),
+      Point2F(1.0f, 0.0f),
+      Point2F(1.0f, 1.0f)
+   };
+
+   // Get info we need to adjust points
+   const MatrixF &camView = state->getCameraTransform();
+
+   // Finalize points
+   for (S32 i = 0; i < 4; i++)
+   {
+      // align with camera
+      camView.mulV(points[i]);
+      // offset
+      points[i] += mLightWorldPos;
+   }
+
+   LinearColorF vertColor;
+   if (mCoronaUseLightColor)
+      vertColor = mLightColor;
+   else
+      vertColor = mCoronaTint;
+
+   GFXVertexBufferHandle< GFXVertexPCT > vb;
+   vb.set(GFX, 4, GFXBufferTypeVolatile);
+   GFXVertexPCT *pVert = vb.lock();
+   if (!pVert) return;
+
+   for (S32 i = 0; i < 4; i++)
+   {
+      pVert->color.set(vertColor.toColorI());
+      pVert->point.set(points[i]);
+      pVert->texCoord.set(sCoords[i].x, sCoords[i].y);
+      pVert++;
+   }
+
+   vb.unlock();
+
+   // Setup SceneData struct.
+
+   SceneData sgData;
+   sgData.wireframe = GFXDevice::getWireframe();
+   sgData.visibility = 1.0f;
+
+   // Draw it
+
+   while (mCoronaMatInst->setupPass(state, sgData))
+   {
+      mCoronaMatInst->setTransforms(*mMatrixSet, state);
+      mCoronaMatInst->setSceneInfo(state, sgData);
+
+      GFX->setVertexBuffer(vb);
+      GFX->drawPrimitive(GFXTriangleStrip, 0, 2);
+   }
+}
+*/
 bool BasicSky::_initShader()
 {
    ShaderData *shaderData;
@@ -391,8 +936,7 @@ bool BasicSky::_initShader()
 
    mCamPosSC = mShader->getShaderConstHandle("$camPos");
    mNightColorSC = mShader->getShaderConstHandle("$nightColor");
-   mNightInterpolantAndExposureSC = mShader->getShaderConstHandle("$nightInterpAndExposure");
-   mUseCubemapSC = mShader->getShaderConstHandle("$useCubemap");
+   mCubeLerpFactors = mShader->getShaderConstHandle("$lerpFactors");
 
    return true;
 }
@@ -486,20 +1030,20 @@ void BasicSky::_initCurves()
    if (mCurves->getSampleCount() > 0)
       return;
 
-   // Takes time of day (0-2) and returns
-   // the night interpolant (0-1) day/night factor.
-   // moonlight = 0, sunlight > 0
+   // Takes time of day (0-2) and returns        
+   // the night interpolant (0-1) day/night factor.  
+   // moonlight = 0, sunlight > 0  
    mCurves[0].clear();
-   mCurves[0].addPoint(0.0f, 0.5f);// Sunrise
-   mCurves[0].addPoint(0.025f, 1.0f);//
-   mCurves[0].addPoint(0.975f, 1.0f);//
-   mCurves[0].addPoint(1.0f, 0.5f);//Sunset
-   mCurves[0].addPoint(1.02f, 0.0f);//Sunlight ends
-   mCurves[0].addPoint(1.98f, 0.0f);//Sunlight begins
-   mCurves[0].addPoint(2.0f, 0.5f);// Sunrise
+   mCurves[0].addPoint(0.0f, 0.5f);// Sunrise  
+   mCurves[0].addPoint(0.025f, 1.0f);//  
+   mCurves[0].addPoint(0.975f, 1.0f);//  
+   mCurves[0].addPoint(1.0f, 0.5f);//Sunset  
+   mCurves[0].addPoint(1.02f, 0.0f);//Sunlight ends  
+   mCurves[0].addPoint(1.98f, 0.0f);//Sunlight begins  
+   mCurves[0].addPoint(2.0f, 0.5f);// Sunrise  
 
-                                   //  Takes time of day (0-2) and returns mieScattering factor
-                                   //   Regulates the size of the sun's disk
+   //  Takes time of day (0-2) and returns mieScattering factor   
+   //   Regulates the size of the sun's disk  
    mCurves[1].clear();
    mCurves[1].addPoint(0.0f, 0.0006f);
    mCurves[1].addPoint(0.01f, 0.00035f);
@@ -508,7 +1052,7 @@ void BasicSky::_initCurves()
    mCurves[1].addPoint(0.2f, 0.00043f);
    mCurves[1].addPoint(0.3f, 0.00062f);
    mCurves[1].addPoint(0.4f, 0.0008f);
-   mCurves[1].addPoint(0.5f, 0.00086f);// High noon
+   mCurves[1].addPoint(0.5f, 0.00086f);// High noon  
    mCurves[1].addPoint(0.6f, 0.0008f);
    mCurves[1].addPoint(0.7f, 0.00062f);
    mCurves[1].addPoint(0.8f, 0.00043f);
@@ -518,38 +1062,36 @@ void BasicSky::_initCurves()
    mCurves[1].addPoint(1.0f, 0.0006f);
    mCurves[1].addPoint(2.0f, 0.0006f);
 
-   // Takes time of day and returns brightness
-   // Controls sunlight and moonlight brightness
+   // Takes time of day and returns brightness  
+   // Controls sunlight and moonlight brightness  
    mCurves[2].clear();
-   mCurves[2].addPoint(0.0f, 0.2f);// Sunrise
+   mCurves[2].addPoint(0.0f, 0.2f);// Sunrise  
    mCurves[2].addPoint(0.1f, 1.0f);
-   mCurves[2].addPoint(0.9f, 1.0f);// Sunset
-   mCurves[2].addPoint(1.008f, 0.0f);//Adjust end of sun's reflection
+   mCurves[2].addPoint(0.9f, 1.0f);// Sunset  
+   mCurves[2].addPoint(1.008f, 0.0f);//Adjust end of sun's reflection  
    mCurves[2].addPoint(1.02001f, 0.0f);
-   mCurves[2].addPoint(1.05f, 0.5f);// Turn brightness up for moonlight
+   mCurves[2].addPoint(1.05f, 0.5f);// Turn brightness up for moonlight  
    mCurves[2].addPoint(1.93f, 0.5f);
-   mCurves[2].addPoint(1.97999f, 0.0f);// No brightness when sunlight starts
-   mCurves[2].addPoint(1.992f, 0.0f);//Adjust start of sun's reflection
-   mCurves[2].addPoint(2.0f, 0.2f); // Sunrise
+   mCurves[2].addPoint(1.97999f, 0.0f);// No brightness when sunlight starts  
+   mCurves[2].addPoint(1.992f, 0.0f);//Adjust start of sun's reflection  
+   mCurves[2].addPoint(2.0f, 0.2f); // Sunrise    
 
-                                    // Interpolation of day/night color sets
-                                    // 0/1  ambient/nightcolor
-                                    // 0 = day colors only anytime
-                                    // 1 = night colors only anytime
-                                    // between 0 and 1 renders both color sets anytime
-
+   // Interpolation of day/night color sets  
+   // 0/1  ambient/nightcolor  
+   // 0 = day colors only anytime  
+   // 1 = night colors only anytime  
+   // between 0 and 1 renders both color sets anytime  
    mCurves[3].clear();
-   mCurves[3].addPoint(0.0f, 0.8f);//Sunrise
+   mCurves[3].addPoint(0.0f, 0.8f);//Sunrise  
    mCurves[3].addPoint(0.1f, 0.0f);
    mCurves[3].addPoint(0.99f, 0.0f);
-   mCurves[3].addPoint(1.0f, 0.8f);// Sunset
-   mCurves[3].addPoint(1.01999f, 1.0f);//
-   mCurves[3].addPoint(1.98001f, 1.0f);// Sunlight begins with full night colors
-   mCurves[3].addPoint(2.0f, 0.8f);  //Sunrise
+   mCurves[3].addPoint(1.0f, 0.8f);// Sunset  
+   mCurves[3].addPoint(1.01999f, 1.0f);//  
+   mCurves[3].addPoint(1.98001f, 1.0f);// Sunlight begins with full night colors  
+   mCurves[3].addPoint(2.0f, 0.8f);  //Sunrise  
 
-                                     //  Takes time of day (0-2) and returns smoothing factor
-                                     //  Interpolates between mMoonTint color and mNightColor
-
+   //  Takes time of day (0-2) and returns smoothing factor   
+   //  Interpolates between mMoonTint color and mNightColor   
    mCurves[4].clear();
    mCurves[4].addPoint(0.0f, 1.0f);
    mCurves[4].addPoint(0.96f, 1.0f);
@@ -563,6 +1105,8 @@ void BasicSky::_initCurves()
 }
 void BasicSky::_updateTimeOfDay(TimeOfDay *timeOfDay, F32 time)
 {
+   setElevation(timeOfDay->getElevationDegrees());
+   setAzimuth(timeOfDay->getAzimuthDegrees());
 }
 
 void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat)
@@ -603,12 +1147,12 @@ void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIns
       rotMat.set(EulerF(M_PI_F, 0.0, 0.0));
       xform.mul(rotMat);
    }
-   xform.setPosition(xform.getPosition() - Point3F(0, 0, mZOffset));
+   xform.setPosition(xform.getPosition());
 
    mShaderConsts->setSafe(mModelViewProjSC, xform);
    mShaderConsts->setSafe(mSphereRadiiSC, sphereRadii);
    mShaderConsts->setSafe(mCamPosSC, camPos);
-   mShaderConsts->setSafe(mNightInterpolantAndExposureSC, Point2F(0.0f, mNightInterpolant));
+   mShaderConsts->setSafe(mCubeLerpFactors, Point4F(0.0f, 0, 0, mDayToNightLerpFactor));
 
    if (GFXDevice::getWireframe())
    {
@@ -629,10 +1173,8 @@ void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIns
    else
       GFX->setCubeTexture(0, NULL);
 
-   if (mUseNightCubemap && mNightCubemap)
+   if (mNightCubemap)
    {
-      mShaderConsts->setSafe(mUseCubemapSC, 1.0f);
-
       if (!mNightCubemap->mCubemap)
          mNightCubemap->createMap();
 
@@ -641,7 +1183,6 @@ void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIns
    else
    {
       GFX->setCubeTexture(1, NULL);
-      mShaderConsts->setSafe(mUseCubemapSC, 0.0f);
    }
 
    GFX->setPrimitiveBuffer(mPrimBuffer);
@@ -650,98 +1191,6 @@ void BasicSky::_render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatIns
    GFX->drawIndexedPrimitive(GFXTriangleList, 0, 0, mVertCount, 0, mPrimCount);
 }
 
-void BasicSky::_renderMoon(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat)
-{
-   if (!mMoonMatInst)
-      return;
-
-   Point3F moonlightPosition = state->getCameraPosition() - /*mLight->getDirection()*/ mMoonLightDir * state->getFarPlane() * 0.9f;
-   F32 dist = (moonlightPosition - state->getCameraPosition()).len();
-
-   // worldRadius = screenRadius * dist / worldToScreen
-   // screenRadius = worldRadius / dist * worldToScreen
-
-   //
-   F32 screenRadius = GFX->getViewport().extent.y * mMoonScale * 0.5f;
-   F32 worldRadius = screenRadius * dist / state->getWorldToScreenScale().y;
-
-   // Calculate Billboard Radius (in world units) to be constant, independent of distance.
-   // Takes into account distance, viewport size, and specified size in editor
-
-   F32 BBRadius = worldRadius;
-
-
-   mMatrixSet->restoreSceneViewProjection();
-
-   if (state->isReflectPass())
-      mMatrixSet->setProjection(state->getSceneManager()->getNonClipProjection());
-
-   mMatrixSet->setWorld(MatrixF::Identity);
-
-   // Initialize points with basic info
-   Point3F points[4];
-   points[0] = Point3F(-BBRadius, 0.0, -BBRadius);
-   points[1] = Point3F(-BBRadius, 0.0, BBRadius);
-   points[2] = Point3F(BBRadius, 0.0, -BBRadius);
-   points[3] = Point3F(BBRadius, 0.0, BBRadius);
-
-   static const Point2F sCoords[4] =
-   {
-      Point2F(0.0f, 0.0f),
-      Point2F(0.0f, 1.0f),
-      Point2F(1.0f, 0.0f),
-      Point2F(1.0f, 1.0f)
-   };
-
-   // Get info we need to adjust points
-   const MatrixF &camView = state->getCameraTransform();
-
-   // Finalize points
-   for (S32 i = 0; i < 4; i++)
-   {
-      // align with camera
-      camView.mulV(points[i]);
-      // offset
-      points[i] += moonlightPosition;
-   }
-
-   // Vertex color.
-   LinearColorF moonVertColor(1.0f, 1.0f, 1.0f, mNightInterpolant);
-
-   // Copy points to buffer.
-
-   GFXVertexBufferHandle< GFXVertexPCT > vb;
-   vb.set(GFX, 4, GFXBufferTypeVolatile);
-   GFXVertexPCT *pVert = vb.lock();
-   if (!pVert) return;
-
-   for (S32 i = 0; i < 4; i++)
-   {
-      pVert->color.set(moonVertColor.toColorI());
-      pVert->point.set(points[i]);
-      pVert->texCoord.set(sCoords[i].x, sCoords[i].y);
-      pVert++;
-   }
-
-   vb.unlock();
-
-   // Setup SceneData struct.
-
-   SceneData sgData;
-   sgData.wireframe = GFXDevice::getWireframe();
-   sgData.visibility = 1.0f;
-
-   // Draw it
-
-   while (mMoonMatInst->setupPass(state, sgData))
-   {
-      mMoonMatInst->setTransforms(*mMatrixSet, state);
-      mMoonMatInst->setSceneInfo(state, sgData);
-
-      GFX->setVertexBuffer(vb);
-      GFX->drawPrimitive(GFXTriangleStrip, 0, 2);
-   }
-}
 
 void BasicSky::_generateSkyPoints()
 {

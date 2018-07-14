@@ -44,13 +44,22 @@
 #ifndef _TRESPONSECURVE_H_
 #include "math/util/tResponseCurve.h"
 #endif
+#ifndef _COLOR_H_
+#include "core/color.h"
+#endif
+#ifndef _LIGHTINFO_H_
+#include "lighting/lightInfo.h"
+#endif
+#ifndef _LIGHTFLAREDATA_H_
+#include "T3D/lightFlareData.h"
+#endif
 
 class SphereMesh;
 class TimeOfDay;
 class CubemapData;
 class MatrixSet;
 
-class BasicSky : public SceneObject
+class BasicSky : public SceneObject, public ISceneLight
 {
    typedef SceneObject Parent;
 
@@ -81,7 +90,71 @@ public:
 
    void prepRenderImage(SceneRenderState* state);
 
+   // ISceneLight
+   virtual void submitLights(LightManager *lm, bool staticLighting);
+   virtual LightInfo* getLight() { return mLight; }
+
+   // ProcessObject
+   virtual void advanceTime(F32 dt);
+
+   ///
+   void setAzimuth(F32 azimuth);
+
+   ///
+   void setElevation(F32 elevation);
+
+   ///
+   void setColor(const LinearColorF &color);
+
+   ///
+   void animate(F32 duration, F32 startAzimuth, F32 endAzimuth, F32 startElevation, F32 endElevation);
+
 protected:
+
+   F32 mSunAzimuth;
+
+   F32 mSunElevation;
+
+   LinearColorF mLightColor;
+
+   LinearColorF mLightAmbient;
+
+   F32 mBrightness;
+
+   bool mAnimateSun;
+   F32  mTotalTime;
+   F32  mCurrTime;
+   F32  mStartAzimuth;
+   F32  mEndAzimuth;
+   F32  mStartElevation;
+   F32  mEndElevation;
+
+   bool mCastShadows;
+   S32 mStaticRefreshFreq;
+   S32 mDynamicRefreshFreq;
+
+   LightInfo *mLight;
+
+   LightFlareData *mFlareData;
+   LightFlareState mFlareState;
+   F32 mFlareScale;
+
+   bool mCoronaEnabled;
+   String mCoronaMatName;
+   BaseMatInstance *mCoronaMatInst;
+   F32 mCoronaScale;
+   LinearColorF mCoronaTint;
+   bool mCoronaUseLightColor;
+
+   // These are not user specified.
+   // These hold data calculated once used across several methods.
+   F32 mCoronaWorldRadius;
+   Point3F mLightWorldPos;
+
+   void _conformLights();
+   void _initCorona();
+   void _renderCorona(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat);
+   void _updateTimeOfDay(TimeOfDay *timeOfDay, F32 time);
 
    void _render(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat);
    void _renderMoon(ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat);
@@ -92,8 +165,6 @@ protected:
    void _initCurves();
 
    void _generateSkyPoints();
-
-   void _updateTimeOfDay(TimeOfDay *timeofDay, F32 time);
 
 protected:
 
@@ -111,13 +182,10 @@ protected:
    F32 mOuterRadius;
    F32 mScale;
 
-   SimObjectPtr<Sun> mSun;
-
    F32 mSphereInnerRadius;
    F32 mSphereOuterRadius;
 
-   F32 mNightInterpolant;
-   F32 mZOffset;
+   F32 mDayToNightLerpFactor;
 
    F32 mMoonAzimuth;
    F32 mMoonElevation;
@@ -137,7 +205,6 @@ protected:
    VectorF mMoonLightDir;
    CubemapData *mNightCubemap;
    String mNightCubemapName;
-   bool mUseNightCubemap;
    MatrixSet *mMatrixSet;
 
    Vector<Point3F> mSkyPoints;
@@ -155,8 +222,7 @@ protected:
    GFXShaderConstHandle *mSphereRadiiSC;              // Inner and out radius, and inner and outer radius squared.
    GFXShaderConstHandle *mCamPosSC;
    GFXShaderConstHandle *mNightColorSC;
-   GFXShaderConstHandle *mNightInterpolantAndExposureSC;
-   GFXShaderConstHandle *mUseCubemapSC;
+   GFXShaderConstHandle *mCubeLerpFactors;            // vec3 - x/y/z contain 0.0-1.0f interpolate factors used to blend between the three cubemap textures (day, night, storm)
 
 };
 
