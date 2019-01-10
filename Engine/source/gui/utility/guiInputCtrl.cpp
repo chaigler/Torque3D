@@ -125,41 +125,73 @@ IMPLEMENT_CALLBACK( GuiInputCtrl, onInputEvent, void, (const char* device, const
 );
 
 //------------------------------------------------------------------------------
-bool GuiInputCtrl::onInputEvent( const InputEventInfo &event )
+bool GuiInputCtrl::onInputEvent(const InputEventInfo& event)
 {
-   // TODO - add POV support...
-   if ( event.action == SI_MAKE )
+   char deviceString[32];
+   if (event.action == SI_MAKE)
    {
-      if ( event.objType == SI_BUTTON
-        || event.objType == SI_POV
-        || ( ( event.objType == SI_KEY ) && !isModifierKey( event.objInst ) ) )
+      if (event.objType == SI_BUTTON
+         || event.objType == SI_POV
+         || event.objType == SI_KEY)
       {
-         char deviceString[32];
-         if ( !ActionMap::getDeviceName( event.deviceType, event.deviceInst, deviceString ) )
-            return( false );
+         if (!ActionMap::getDeviceName(event.deviceType, event.deviceInst, deviceString))
+            return false;
 
-         const char* actionString = ActionMap::buildActionString( &event );
+         if ((event.objType == SI_KEY) && isModifierKey(event.objInst))
+         {
+            if (!mSendModifierEvents)
+               return false;
 
-		 //Con::executef( this, "onInputEvent", deviceString, actionString, "1" );
-		 onInputEvent_callback(deviceString, actionString, 1);
+            char keyString[32];
+            if (!ActionMap::getKeyString(event.objInst, keyString))
+               return false;
 
-         return( true );
+            onInputEvent_callback(deviceString, keyString, 1);
+         }
+         else
+         {
+            const char* actionString = ActionMap::buildActionString(&event);
+            onInputEvent_callback(deviceString, actionString, 1);
+         }
+         return true;
       }
    }
-   else if ( event.action == SI_BREAK )
+   else if (event.action == SI_BREAK)
    {
-      if ( ( event.objType == SI_KEY ) && isModifierKey( event.objInst ) )
+      if ((event.objType == SI_KEY) && isModifierKey(event.objInst))
       {
          char keyString[32];
-         if ( !ActionMap::getKeyString( event.objInst, keyString ) )
-            return( false );
+         if (!ActionMap::getKeyString(event.objInst, keyString))
+            return false;
 
-         //Con::executef( this, "onInputEvent", "keyboard", keyString, "0" );
-		 onInputEvent_callback("keyboard", keyString, 0);
+         onInputEvent_callback("keyboard", keyString, 0);
+         return true;
+      }
+      else if (mSendBreakEvents)
+      {
+         if (!ActionMap::getDeviceName(event.deviceType, event.deviceInst, deviceString))
+            return false;
 
-         return( true );
+         const char* actionString = ActionMap::buildActionString(&event);
+
+         onInputEvent_callback(deviceString, actionString, 0);
+         return true;
       }
    }
+   else if (mSendAxisEvents && ((event.objType == SI_AXIS) || (event.objType == SI_INT) || (event.objType == SI_FLOAT)))
+   {
+      F32 fValue = event.fValue;
+      if (event.objType == SI_INT)
+         fValue = (F32)event.iValue;
 
-   return( false );
+      if (!ActionMap::getDeviceName(event.deviceType, event.deviceInst, deviceString))
+         return false;
+
+      const char* actionString = ActionMap::buildActionString(&event);
+
+      onAxisEvent_callback(deviceString, actionString, fValue);
+      return (event.deviceType != MouseDeviceType);   // Don't consume mouse move events
+   }
+
+   return false;
 }
