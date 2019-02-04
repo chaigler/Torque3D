@@ -100,3 +100,6 @@ $pref::Shadows::disable = false;
 //  SoftShadow - Does a simple soft shadow
 //  SoftShadowHighQuality 
 $pref::Shadows::filterMode = "SoftShadow";
+
+// List of lighting managers to initialize, in order of priority.
+$lightManager::defaults = "Advanced Lighting" TAB "Basic Lighting";

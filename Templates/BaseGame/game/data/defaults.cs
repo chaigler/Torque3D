@@ -61,12 +61,8 @@ $pref::Video::Brightness = 0;
 
 /// The perfered light manager to use at startup.  If blank
 /// or if the selected one doesn't work on this platfom it
-/// will try the defaults below.
+/// will try the defaults listed in $lightManager::defaults.
 $pref::lightManager = "";
-
-/// This is the default list of light managers ordered from
-/// most to least desirable for initialization.
-$lightManager::defaults = "Advanced Lighting";
 
 /// A scale to apply to the camera view distance
 /// typically used for tuning performance.
