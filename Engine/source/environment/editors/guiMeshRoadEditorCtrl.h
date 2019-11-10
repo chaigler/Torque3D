@@ -45,6 +45,9 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
    public:
    
       friend class GuiMeshRoadEditorUndoAction;
+
+      //static StringTableEntry smNormalMode;
+      //static StringTableEntry smAddNodeMode;
 		
 		String mSelectMeshRoadMode;
 		String mAddMeshRoadMode;
@@ -89,6 +92,8 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
       void setMode( String mode, bool sourceShortcut  );
       String getMode() { return mMode; }
 
+      //void setGizmoMode( Gizmo::Mode mode ) { mGizmo.setMode( mode ); }
+
       void setSelectedRoad( MeshRoad *road );
       MeshRoad* getSelectedRoad() { return mSelRoad; };
       void setSelectedNode( S32 node );
@@ -100,7 +105,7 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
       void setNodeDepth( F32 depth );
 		
 		Point3F getNodePosition();
-      void setNodePosition(const Point3F& pos);
+		void setNodePosition( Point3F pos );
 
       VectorF getNodeNormal();
       void setNodeNormal( const VectorF &normal );
@@ -108,7 +113,6 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
       void matchTerrainToRoad();
 
    protected:
-		
 		enum { 
 			Top = 0, 
 			Bottom = 1, 
@@ -117,6 +121,7 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
 		};
 
       S32 _getNodeAtScreenPos( const MeshRoad *pRoad, const Point2I &posi );
+		S32 _getProfileNodeAtScreenPos( MeshRoadProfile *pProfile, const Point2I &posi);		// RDM
       void _drawSpline( MeshRoad *road, const ColorI &color );
       void _drawControlNodes( MeshRoad *road, const ColorI &color );
 
@@ -127,10 +132,14 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
 
       bool mSavedDrag;
       bool mIsDirty;
+		bool mSavedProfileDrag;				// RDM
+		bool mDeselectProfileNode;			// RDM
 
       SimSet *mRoadSet;
       S32 mSelNode;
       S32 mHoverNode;
+		S32 mProfileNode;						// RDM
+		Vector<U32> mSelProfNodeList;		// RDM
       U32 mAddNodeIdx;
       SimObjectPtr<MeshRoad> mSelRoad;      
       SimObjectPtr<MeshRoad> mHoverRoad;
@@ -146,11 +155,12 @@ class GuiMeshRoadEditorCtrl : public EditTSCtrl
       ColorI mHoverSplineColor;
       ColorI mSelectedSplineColor;
       ColorI mHoverNodeColor;
+		ColorI mProfileColor;		// RDM
 
       bool mHasCopied;
-	public:
-		
-		StringTableEntry mMaterialName[SurfaceCount];
+   public:
+
+      StringTableEntry mMaterialName[SurfaceCount];
 };
 
 class GuiMeshRoadEditorUndoAction : public UndoAction
@@ -164,6 +174,8 @@ class GuiMeshRoadEditorUndoAction : public UndoAction
       GuiMeshRoadEditorCtrl *mEditor;         
 
       Vector<MeshRoadNode> mNodes;
+		Vector<MeshRoadProfileNode> mProfileNodes;			// RDM
+		Vector<U8> mProfileMtrls;									// RDM
 
       SimObjectId mObjId;
       F32 mMetersPerSegment;

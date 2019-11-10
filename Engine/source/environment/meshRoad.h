@@ -1,29 +1,7 @@
 //-----------------------------------------------------------------------------
-// Copyright (c) 2012 GarageGames, LLC
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to
-// deal in the Software without restriction, including without limitation the
-// rights to use, copy, modify, merge, publish, distribute, sublicense, and/or
-// sell copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in
-// all copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
-// FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS
-// IN THE SOFTWARE.
+// Torque 3D
+// Copyright (C) GarageGames.com, Inc.
 //-----------------------------------------------------------------------------
-
-//~~~~~~~~~~~~~~~~~~~~//~~~~~~~~~~~~~~~~~~~~//~~~~~~~~~~~~~~~~~~~~//~~~~~~~~~~~~~~~~~~~~~//
-// Arcane-FX for MIT Licensed Open Source version of Torque 3D from GarageGames
-// Copyright (C) 2015 Faust Logic, Inc.
-//~~~~~~~~~~~~~~~~~~~~//~~~~~~~~~~~~~~~~~~~~//~~~~~~~~~~~~~~~~~~~~//~~~~~~~~~~~~~~~~~~~~~//
 
 #ifndef _MESHROAD_H_
 #define _MESHROAD_H_
@@ -50,6 +28,7 @@
 #include "collision/convex.h"
 #endif
 
+#include "math/util/decomposePoly.h"				// RDM
 
 //extern U32 gIdxArray[6][2][3];
 
@@ -60,6 +39,73 @@ struct MeshRoadHitSegment
 };
 
 class MeshRoad;
+
+// RDM: start
+//-------------------------------------------------------------------------
+// MeshRoadProfileNode Class
+//-------------------------------------------------------------------------
+
+class MeshRoadProfileNode
+{
+private:
+	Point3F	mPos;			// The position of the node.  Only x and y are used.
+	bool		mSmooth;		// Is the node smoothed?  Determines the normal at the node.
+
+public:
+	MeshRoadProfileNode()				{ mSmooth = false; }
+	MeshRoadProfileNode(Point3F p)		{ mPos = p; mSmooth = false; }
+
+	void setPosition(F32 x, F32 y)	{ mPos.x = x; mPos.y = y; mPos.z = 0.0f; }
+	Point3F getPosition()				{ return mPos; }
+	void setSmoothing(bool isSmooth) { mSmooth = isSmooth; }
+	bool isSmooth()						{ return mSmooth; }
+};
+
+//-------------------------------------------------------------------------
+// MeshRoadProfile Class
+//-------------------------------------------------------------------------
+
+class MeshRoadProfile
+{
+private:
+	friend class GuiMeshRoadEditorCtrl;
+	friend class MeshRoad;
+	friend class GuiMeshRoadEditorUndoAction;
+
+protected:
+	MeshRoad*							mRoad;			// A pointer to the Road this profile belongs to
+	Vector<MeshRoadProfileNode>	mNodes;			// The list of nodes in the profile
+	Vector<VectorF>					mNodeNormals;	// The list of normals for each node
+	Vector<U8>							mSegMtrls;		// The list of segment materials
+	MatrixF								mObjToSlice;	// Transform profile from obj to slice space
+	MatrixF								mSliceToObj;	// Transform profile from slice to obj space
+	Point3F								mStartPos;		// Start position of profile in world space
+	decompPoly							mCap;				// The polygon that caps the ends
+
+public:
+	MeshRoadProfile();
+
+	S32 clickOnLine(Point3F &p);											// In profile space
+	void addPoint(U32 nodeId, Point3F &p);								// In profile space
+	void removePoint(U32 nodeId);						
+	void setNodePosition(U32 nodeId, Point3F pos);					// In profile space
+	void toggleSmoothing(U32 nodeId);
+	void toggleSegMtrl(U32 seg);											// Toggle between top, bottom, side
+	void generateNormals();
+	void generateEndCap(F32 width);
+	void setProfileDepth(F32 depth);
+	void setTransform(const MatrixF &mat, const Point3F &p);		// Object to slice space transform
+	void getNodeWorldPos(U32 nodeId, Point3F &p);					// Get node position in world space
+	void getNormToSlice(U32 normId, VectorF &n);						// Get normal vector in slice space
+	void getNormWorldPos(U32 normId, Point3F &p);					// Get normal end pos in world space
+	void worldToObj(Point3F &p);											// Transform from world to obj space
+	void objToWorld(Point3F &p);											// Transform from obj to world space
+	F32 getProfileLen();
+	F32 getNodePosPercent(U32 nodeId);
+	Vector<MeshRoadProfileNode> getNodes() { return mNodes; }
+	void resetProfile(F32 defaultDepth);								// Reset profile to 2 default nodes
+};
+// RDM: end
 
 //-------------------------------------------------------------------------
 // MeshRoadConvex Class
@@ -281,6 +327,9 @@ struct MeshRoadSlice
    F32 texCoordV;
 
    U32 parentNodeIdx;
+
+	Vector<Point3F> verts;				// RDM
+	Vector<VectorF> norms;				// RDM
 };
 typedef Vector<MeshRoadSlice> MeshRoadSliceVector;
 
@@ -419,6 +468,7 @@ private:
    friend class GuiMeshRoadEditorCtrl;
    friend class GuiMeshRoadEditorUndoAction;
    friend class MeshRoadConvex;
+	friend class MeshRoadProfile;									// RDM
 
    typedef SceneObject		Parent;
 
@@ -430,8 +480,9 @@ private:
       InitialUpdateMask = Parent::NextFreeMask << 3,
       SelectedMask      = Parent::NextFreeMask << 4,
       MaterialMask      = Parent::NextFreeMask << 5,
-      NextFreeMask      = Parent::NextFreeMask << 6,
-   };   
+		ProfileMask			= Parent::NextFreeMask << 6,		// RDM
+      NextFreeMask      = Parent::NextFreeMask << 7,		// RDM: changed to 7
+   };
 
 public:
 
@@ -474,6 +525,7 @@ public:
    void setBatchSize( U32 level );
    void setTextureFile( StringTableEntry file );
    void setTextureRepeat( F32 meters );
+   void setMetersPerSegment( F32 meters );
 
    bool collideRay( const Point3F &origin, const Point3F &direction, U32 *nodeIdx = NULL, Point3F *collisionPnt = NULL );
    bool buildSegmentPolyList( AbstractPolyList* polyList, U32 startSegIdx, U32 endSegIdx, bool capFront, bool capEnd );
@@ -508,12 +560,13 @@ public:
 
    /// Protected 'Component' Field setter that will add a component to the list.
    static bool addNodeFromField( void *object, const char *index, const char *data );
-
+	static bool addProfileNodeFromField(void *obj, const char* index, const char* data);			// RDM
    static bool smEditorOpen;
    static bool smWireframe;
    static bool smShowBatches;
    static bool smShowSpline;
    static bool smShowRoad;
+	static bool smShowRoadProfile;														// RDM
    static SimObjectPtr<SimSet> smServerMeshRoadSet;   
 
 protected:
@@ -554,12 +607,15 @@ protected:
    BaseMatInstance *mMatInst[SurfaceCount];
 
    U32 mVertCount[SurfaceCount];
-   U32 mTriangleCount[SurfaceCount];   
+   U32 mTriangleCount[SurfaceCount];
+
+	MeshRoadProfile mSideProfile;					// RDM
       
    // Fields.
    F32 mTextureLength;
    F32 mBreakAngle;
    S32 mWidthSubdivisions;
+//	F32 mBottomScale;					// RDM
    
    // Collision and Physics.
    Convex* mConvexList;

@@ -58,7 +58,8 @@ function initializeMeshRoadEditor()
    %map.bindCmd( keyboard, "numpadminus", "ToolsPaletteArray->MeshRoadEditorRemovePointMode.performClick();", "" );  
    %map.bindCmd( keyboard, "z", "MeshRoadEditorShowSplineBtn.performClick();", "" );  
    %map.bindCmd( keyboard, "x", "MeshRoadEditorWireframeBtn.performClick();", "" );  
-   %map.bindCmd( keyboard, "v", "MeshRoadEditorShowRoadBtn.performClick();", "" );  
+   %map.bindCmd( keyboard, "v", "MeshRoadEditorShowRoadBtn.performClick();", "" );
+   %map.bindCmd( keyboard, "p", "MeshRoadEditorShowProfileBtn.performClick();", "");
    MeshRoadEditorPlugin.map = %map;
    
    MeshRoadEditorPlugin.initSettings();

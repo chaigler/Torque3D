@@ -24,6 +24,7 @@ $MeshRoad::wireframe = true;
 $MeshRoad::showSpline = true;
 $MeshRoad::showReflectPlane = false;
 $MeshRoad::showRoad = true;
+$MeshRoad::showRoadProfile = false;
 $MeshRoad::breakAngle = 3.0;
    
 function MeshRoadEditorGui::onWake( %this )
@@ -65,12 +66,14 @@ function MeshRoadEditorGui::onEscapePressed( %this )
    return false;
 }
 function MeshRoadEditorGui::onRoadSelected( %this, %road )
-{
+{      
+   if( !isObject( %road ) )
+      return;   
+   
    %this.road = %road;
    
    // Update the materialEditorList
-   if( isObject( %road ) )
-      $Tools::materialEditorList = %road.getId();
+   $Tools::materialEditorList = %road.getId();
    
    MeshRoadInspector.inspect( %road );  
    MeshRoadTreeView.buildVisibleTree(true);
