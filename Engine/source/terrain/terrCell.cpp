@@ -269,7 +269,7 @@ void TerrCell::createPrimBuffer( GFXPrimitiveBufferHandle *primBuffer )
       maxIndex = b1;
       counter += 6;
    }
-
+   
    primBuffer->unlock();
 }
 
@@ -488,7 +488,8 @@ void TerrCell::_updateVertexBuffer()
 
    // Add verts for 'skirts' around/beneath the edge verts of this cell.
    // This could probably be reduced to a loop...
-   
+
+   // Set to 0 to hide the skirts. TBD: Attempted to remove skirt generation completley but it caused flickering issues - vbuffer issue probably?
    const F32 skirtDepth = mSize / smMinCellSize * mTerrain->getSquareSize();
 
    // Top edge skirt
@@ -586,7 +587,7 @@ void TerrCell::_updateVertexBuffer()
       vbcounter++;
       ++vert;      
    }
-
+   
    AssertFatal( vbcounter == smVBSize, "bad" );
    mVertexBuffer.unlock();
    deleteZodiacVertexBuffer();
@@ -826,7 +827,7 @@ void TerrCell::_updatePrimitiveBuffer()
 
       mTriCount += 2;
    }
-
+   
    mPrimBuffer.unlock();
    prim->numPrimitives = mTriCount;
 }
