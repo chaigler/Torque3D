@@ -877,6 +877,13 @@ function ObjectBuilderGui::buildParticleSimulation(%this)
 	%this.process();
 }
 
+function ObjectBuilderGui::buildBackgroundShape(%this)
+{
+   %this.objectClassName = "BackgroundShape";
+   %this.addField( "shapeName", "TypeFile", "Shape File", "", "*.*");
+   %this.process();
+}
+
 //------------------------------------------------------------------------------
 // Mission
 //------------------------------------------------------------------------------

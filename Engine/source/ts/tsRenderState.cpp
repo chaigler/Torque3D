@@ -36,7 +36,8 @@ TSRenderState::TSRenderState()
       mLightQuery( NULL ),
       mAccuTex( NULL ),
       mNodeTransforms( NULL ),
-      mNodeTransformCount( 0 )
+      mNodeTransformCount( 0 ),
+      mBackdropBinHint(false)
 {
 }
 
@@ -52,6 +53,7 @@ TSRenderState::TSRenderState( const TSRenderState &state )
       mLightQuery( state.mLightQuery ),
       mAccuTex( state.mAccuTex ),
       mNodeTransforms( state.mNodeTransforms ),
-      mNodeTransformCount( state.mNodeTransformCount )
+      mNodeTransformCount( state.mNodeTransformCount ),
+      mBackdropBinHint(state.mBackdropBinHint)
 {
 }

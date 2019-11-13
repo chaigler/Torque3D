@@ -115,6 +115,9 @@ protected:
    /// Count of matrices in the mNodeTransforms list
    U32 mNodeTransformCount;
 
+   // a hint that allows the render bin to be chosen by the object
+   bool mBackdropBinHint;
+
 public:
 
    
@@ -168,6 +171,10 @@ public:
    ///@ see mNodeTransforms, mNodeTransformCount
    void setNodeTransforms(MatrixF *list, U32 count) { mNodeTransforms = list; mNodeTransformCount = count; }
    void getNodeTransforms(MatrixF **list, U32 *count) const { *list = mNodeTransforms; *count = mNodeTransformCount; }
+
+   ///@see mBackdropBinHint
+   void setBackdropBinHint(bool hint) { mBackdropBinHint = hint; }
+   bool getBackdropBinHint() const { return mBackdropBinHint; }
 
    /// @}
 };

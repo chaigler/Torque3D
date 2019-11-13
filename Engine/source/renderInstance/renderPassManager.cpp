@@ -61,7 +61,8 @@ const RenderInstType RenderPassManager::RIT_Custom("Custom");
 const RenderInstType RenderPassManager::RIT_Particle("Particle");
 const RenderInstType RenderPassManager::RIT_Occluder("Occluder");
 const RenderInstType RenderPassManager::RIT_Editor("Editor");
-
+const RenderInstType RenderPassManager::RIT_BackgroundShapeMesh("BackdropMesh");
+const RenderInstType RenderPassManager::RIT_BackgroundShapeMeshTranslucent("TranslucentBackdropMesh");
 
 //*****************************************************************************
 // RenderInstance

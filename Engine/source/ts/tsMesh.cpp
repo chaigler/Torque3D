@@ -162,6 +162,10 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
    coreRI->meshName = meshName;
 #endif
 
+   // use the renderBinHint if specified
+   if (rdata.getBackdropBinHint())
+      coreRI->type = RenderPassManager::RIT_BackgroundShapeMesh;
+
    // Pass accumulation texture along.
    coreRI->accuTex = rdata.getAccuTex();
 
@@ -280,7 +284,11 @@ void TSMesh::innerRender( TSMaterialList *materials, const TSRenderState &rdata,
       // Translucent materials need the translucent type.
       if ( matInst->getMaterial()->isTranslucent() )
       {
-         ri->type = RenderPassManager::RIT_Translucent;
+         if (ri->type == RenderPassManager::RIT_BackgroundShapeMesh)
+            ri->type = RenderPassManager::RIT_BackgroundShapeMeshTranslucent;
+         else
+            ri->type = RenderPassManager::RIT_Translucent;
+
          ri->translucentSort = true;
       }
 

@@ -55,6 +55,11 @@ function initRenderManager()
    //DiffuseRenderPassManager.addManager( new RenderVistaMgr()               { bintype = "Vista"; renderOrder = 0.15; processAddOrder = 0.15; } );
    
    DiffuseRenderPassManager.addManager( new RenderObjectMgr(BeginBin)      { bintype = "Begin"; renderOrder = 0.2; processAddOrder = 0.2; } );
+   
+   // BackgroundShape render managers.
+   DiffuseRenderPassManager.addManager( new RenderMeshMgr()                    { bintype = "BackgroundShapeMesh"; renderOrder = 0.25; processAddOrder = 0.25; } );
+   DiffuseRenderPassManager.addManager( new RenderBackgroundShapeMeshTranslucentMgr() { bintype = "BackgroundShapeMeshTranslucent"; renderOrder = 0.26; processAddOrder = 0.26; } );
+   
    // Normal mesh rendering.
    DiffuseRenderPassManager.addManager( new RenderTerrainMgr(TerrainBin)   { renderOrder = 0.4; processAddOrder = 0.4; basicOnly = true; } );
    DiffuseRenderPassManager.addManager( new RenderMeshMgr(MeshBin)         { bintype = "Mesh"; renderOrder = 0.5; processAddOrder = 0.5; basicOnly = true; } );

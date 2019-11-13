@@ -163,7 +163,10 @@ inline BaseMatInstance* RenderBinManager::getMaterial( RenderInst *inst ) const
    if (  inst->type == RenderPassManager::RIT_Mesh || 
          inst->type == RenderPassManager::RIT_Decal ||
          inst->type == RenderPassManager::RIT_DecalRoad ||         
-         inst->type == RenderPassManager::RIT_Translucent )
+         inst->type == RenderPassManager::RIT_Translucent ||
+         inst->type == RenderPassManager::RIT_BackgroundShapeMeshTranslucent ||
+         inst->type == RenderPassManager::RIT_BackgroundShapeMesh
+      )
       return static_cast<MeshRenderInst*>(inst)->matInst;
 
    return NULL;      

@@ -91,6 +91,7 @@ RenderDeferredMgr::RenderDeferredMgr( bool gatherDepth,
    notifyType( RenderPassManager::RIT_Mesh );
    notifyType( RenderPassManager::RIT_Terrain );
    notifyType( RenderPassManager::RIT_Object );
+   notifyType(RenderPassManager::RIT_BackgroundShapeMesh);
 
    // We want a full-resolution buffer
    mTargetSizeType = RenderTexTargetBinManager::WindowSize;
@@ -244,7 +245,8 @@ void RenderDeferredMgr::addElement( RenderInst *inst )
    // First what type of render instance is it?
    const bool isDecalMeshInst = ((inst->type == RenderPassManager::RIT_Decal)||(inst->type == RenderPassManager::RIT_DecalRoad));
 
-   const bool isMeshInst = inst->type == RenderPassManager::RIT_Mesh;
+   const bool isMeshInst = inst->type == RenderPassManager::RIT_Mesh ||
+                           inst->type == RenderPassManager::RIT_BackgroundShapeMesh;
 
    const bool isTerrainInst = inst->type == RenderPassManager::RIT_Terrain;
 

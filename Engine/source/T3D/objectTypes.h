@@ -160,12 +160,17 @@ enum SceneObjectTypes
    InteriorLikeObjectType =  BIT(24),
    TerrainLikeObjectType = BIT(25),
 #if defined(AFX_CAP_AFXMODEL_TYPE) 
-   afxModelObjectType = BIT(26)
+   afxModelObjectType = BIT(26),
+   BackgroundShapeObjectType = BIT(27)
+#else
+   BackgroundShapeObjectType = BIT(26)
 #endif 
 };
 
 enum SceneObjectTypeMasks : U32
 {
+   BACKGROUND_SHAPE_TYPEMASK = BackgroundShapeObjectType,
+
    STATIC_COLLISION_TYPEMASK = (StaticShapeObjectType |
    EntityObjectType),
 

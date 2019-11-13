@@ -118,6 +118,8 @@ public:
    static const RenderInstType RIT_Particle;
    static const RenderInstType RIT_Occluder;
    static const RenderInstType RIT_Editor;
+   static const RenderInstType RIT_BackgroundShapeMesh;
+   static const RenderInstType RIT_BackgroundShapeMeshTranslucent;
 
 public:
 

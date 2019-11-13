@@ -92,6 +92,9 @@ RenderGlowMgr::RenderGlowMgr()
    notifyType( RenderPassManager::RIT_DecalRoad );
    notifyType( RenderPassManager::RIT_Translucent );
    notifyType( RenderPassManager::RIT_Particle );
+   notifyType(RenderPassManager::RIT_BackgroundShapeMesh);
+   notifyType(RenderPassManager::RIT_BackgroundShapeMeshTranslucent);
+
 
    mParticleRenderMgr = NULL;
 
