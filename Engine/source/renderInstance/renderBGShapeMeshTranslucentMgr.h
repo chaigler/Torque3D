@@ -5,6 +5,7 @@
 #include "renderInstance\renderTranslucentMgr.h"
 #endif
 
+// TBD: Translucent background shapes don't work.
 class RenderTranslucentBackdropMeshMgr : public RenderBinManager
 {
    typedef RenderBinManager Parent;
