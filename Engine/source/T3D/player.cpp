@@ -1569,7 +1569,7 @@ ConsoleDocClass( Player,
    "@ingroup gameObjects\n"
 );
 
-F32 Player::mGravity = 0;
+F32 Player::mGravity = -20;
 
 //----------------------------------------------------------------------------
 
@@ -2528,8 +2528,8 @@ void Player::allowAllPoses()
 {
    mAllowJumping = true;
    mAllowJetJumping = true;
-   mAllowSprinting = false;//CH: Was true;
-   mAllowCrouching = false;//CH: Was true;
+   mAllowSprinting = true;
+   mAllowCrouching = true;
    mAllowProne = true;
    mAllowSwimming = true;
 }
@@ -2798,12 +2798,8 @@ void Player::updateMove(const Move* move)
             mDelta.headVec[i] += M_2PI_F;
       }
    }
-   //CH: Change to apply movement vector in direction player is looking
-   MatrixF xRot,zRot;
-   xRot.set(EulerF(mHead.x, 0, 0));
-   zRot.set(EulerF(0, 0, mRot.z));
-   MatrixF rot;
-   rot.mul(zRot, xRot);
+   MatrixF zRot;
+   zRot.set(EulerF(0.0f, 0.0f, mRot.z));
 
    // Desired move direction & speed
    VectorF moveVec;
@@ -2815,15 +2811,12 @@ void Player::updateMove(const Move* move)
    // player is lifted off the ground or knocked down.
    if ((mState == MoveState || (mState == RecoverState && mDataBlock->recoverRunForceScale > 0.0f)) && mDamageState == Enabled && !isAnimationLocked())
    {
-      //zRot.getColumn(0,&moveVec);
-      rot.getColumn(0, &moveVec);
+      zRot.getColumn(0,&moveVec);
       moveVec *= (move->x * (mPose == SprintPose ? mDataBlock->sprintStrafeScale : 1.0f));
-      // CH: Change to apply movement vector in direction player is looking
       VectorF tv;
-      rot.getColumn(1, &tv);
+      zRot.getColumn(1,&tv);
       moveVec += tv * move->y;
-      rot.getColumn(2, &tv);
-      moveVec += tv * move->z;
+
       // Clamp water movement
       if (move->y > 0.0f)
       {
@@ -2970,11 +2963,7 @@ void Player::updateMove(const Move* move)
       // Convert to acceleration
       if ( pvl )
          pv *= moveSpeed / pvl;
-
-      VectorF runAcc;
-      if (moveSpeed > 0.0)
-         runAcc = pv - (mVelocity + acc);
-
+      VectorF runAcc = pv - (mVelocity + acc);
       F32 runSpeed = runAcc.len();
 
       // Clamp acceleration, player also accelerates faster when
@@ -3007,15 +2996,11 @@ void Player::updateMove(const Move* move)
       if (pvl)
          pv *= moveSpeed / pvl;
 
-      VectorF runAcc;
-      if (moveSpeed > 0.0)
-         runAcc = pv - (mVelocity + acc);
-      //CH: Change to apply movement vector in direction player is looking
-      //runAcc.z = 0;
+      VectorF runAcc = pv - (mVelocity + acc);
+      runAcc.z = 0;
       runAcc.x = runAcc.x * mDataBlock->airControl;
       runAcc.y = runAcc.y * mDataBlock->airControl;
       F32 runSpeed = runAcc.len();
-
       // We don't test for sprinting when performing air control
       F32 maxAcc = (mDataBlock->runForce / getMass()) * TickSec * 0.3f;
 
@@ -3223,72 +3208,9 @@ void Player::updateMove(const Move* move)
       mJetting = false;
    }
 
-   //CH: Change to allow downward jetting.
-   if (move->trigger[3] && !isMounted())
-   {
-      //mJetting = true;
-
-      // Scale the jump impulse base on maxJumpSpeed
-      F32 zSpeedScale = mVelocity.z;
-
-      if (zSpeedScale <= mDataBlock->jetMaxJumpSpeed)
-      {
-         zSpeedScale = (zSpeedScale <= mDataBlock->jetMinJumpSpeed) ? 1 :
-            1 - (zSpeedScale - mDataBlock->jetMinJumpSpeed) / (mDataBlock->jetMaxJumpSpeed - mDataBlock->jetMinJumpSpeed);
-
-         // Desired jump direction
-         VectorF pv = moveVec;
-         F32 len = pv.len();
-
-         if (len > 0.0f)
-            pv *= 1 / len;
-
-         F32 impulse = mDataBlock->jetJumpForce / getMass();
-
-         acc.z -= impulse * zSpeedScale;
-
-         //mEnergy -= mDataBlock->jetJumpEnergyDrain;
-      }
-   }
-   else
-   {
-      //mJetting = false;
-   }
-
-   //CH: Change to allow upward jetting.
-   if (move->trigger[2] && !isMounted())
-   {
-      //mJetting = true;
-
-      // Scale the jump impulse base on maxJumpSpeed
-      F32 zSpeedScale = mVelocity.z;
-
-      if (zSpeedScale <= mDataBlock->jetMaxJumpSpeed)
-      {
-         zSpeedScale = (zSpeedScale <= mDataBlock->jetMinJumpSpeed) ? 1 :
-            1 - (zSpeedScale - mDataBlock->jetMinJumpSpeed) / (mDataBlock->jetMaxJumpSpeed - mDataBlock->jetMinJumpSpeed);
-
-         // Desired jump direction
-         VectorF pv = moveVec;
-         F32 len = pv.len();
-
-         if (len > 0.0f)
-            pv *= 1 / len;
-
-         F32 impulse = mDataBlock->jetJumpForce / getMass();
-
-         acc.z += impulse * zSpeedScale;
-
-         //mEnergy -= mDataBlock->jetJumpEnergyDrain;
-      }
-   }
-   else
-   {
-      //mJetting = false;
-   }
    // Add in force from physical zones...
    acc += (mAppliedForce / getMass()) * TickSec;
- 
+
    // Adjust velocity with all the move & gravity acceleration
    // TG: I forgot why doesn't the TickSec multiply happen here...
    mVelocity += acc;
