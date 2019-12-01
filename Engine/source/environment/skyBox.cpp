@@ -53,7 +53,7 @@ ConsoleDocClass( SkyBox,
 
 SkyBox::SkyBox()
 {
-   mTypeMask |= EnvironmentObjectType | StaticObjectType;
+   mTypeMask |= EnvironmentObjectType;
    mNetFlags.set(Ghostable | ScopeAlways);
 
    mMatName = "";

@@ -58,7 +58,7 @@ ConsoleDocClass( Sun,
 Sun::Sun()
 {
    mNetFlags.set(Ghostable | ScopeAlways);
-   mTypeMask = EnvironmentObjectType | LightObjectType | StaticObjectType;
+   mTypeMask = EnvironmentObjectType | LightObjectType;
 
    mLightColor.set(0.7f, 0.7f, 0.7f);
    mLightAmbient.set(0.3f, 0.3f, 0.3f);

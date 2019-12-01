@@ -187,9 +187,9 @@ void SceneManager::renderScene( ScenePassType passType, U32 objectMask )
    if (passType == SPT_Diffuse)
    {
       // render backdrop
-      renderScene(&renderState, BACKGROUND_SHAPE_TYPEMASK);
+      //renderScene(&renderState, BACKGROUND_SHAPE_TYPEMASK);
       // clear the z buffer so that everything else renders on top of the backdrop
-      GFX->clear(GFXClearZBuffer, ColorI::BLACK, 1.0f, 0);
+      //GFX->clear(GFXClearZBuffer, ColorI::BLACK, 1.0f, 0);
    }
 
    // then render the rest of the scene
