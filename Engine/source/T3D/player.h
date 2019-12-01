@@ -130,6 +130,17 @@ struct PlayerData: public ShapeBaseData {
    F32 maxJumpSpeed;          ///< Maximum speed before the player can no longer jump
    F32 jumpSurfaceAngle;      ///< Angle from vertical in degrees where the player can jump
    S32 jumpDelay;             ///< Delay time in ticks between jumps
+   // CH: Added double jumping
+   bool doubleJumpEnabled;
+   S32 doubleJumpDelay;
+   F32 doubleJumpForce;
+   F32 doubleJumpMinHeight;
+   F32 doubleJumpMaxHeight;
+   // CH: Added wall jumping
+   S32 wallJumpDelay;
+   F32 wallJumpForce;
+   F32 wallJumpForceZScalar;
+   S32 wallJumpGravityDelay;
 
    // Sprinting
    F32 sprintForce;                 ///< Force used to accelerate player
@@ -465,7 +476,10 @@ protected:
    };
    ActionState mState;              ///< What is the player doing? @see ActionState
    bool mFalling;                   ///< Falling in mid-air?
-   S32 mJumpDelay;                  ///< Delay till next jump   
+   S32 mJumpDelay;                  ///< Delay till next jump
+   // CH: Added wall jumping
+   S32 mWallJumpDelay;              ///< Delay till next wall jump
+   S32 mWallJumpGravityDelay;       ///< Delay till gravity resets
    
    Pose  mPose;
    bool  mAllowJumping;
@@ -476,6 +490,9 @@ protected:
    bool  mAllowSwimming;
    
    S32 mContactTimer;               ///< Ticks since last contact
+
+   // CH: Added double jumping
+   bool mDoubleJumped;
 
    Point3F mJumpSurfaceNormal;      ///< Normal of the surface the player last jumped on
    U32 mJumpSurfaceLastContact;     ///< How long it's been since the player landed (ticks)

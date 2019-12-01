@@ -311,6 +311,17 @@ PlayerData::PlayerData()
    jumpDelay = 30;
    minJumpSpeed = 500.0f;
    maxJumpSpeed = 2.0f * minJumpSpeed;
+   // CH: Added double jumping
+   doubleJumpEnabled = false;
+   doubleJumpDelay = 8;
+   doubleJumpForce = 75.0f;
+   doubleJumpMinHeight = 1.0f;
+   doubleJumpMaxHeight = 150.0f;
+   // CH: Added wall jumping
+   wallJumpDelay = 5;
+   wallJumpForce = 75.0f;
+   wallJumpForceZScalar = 1.0f;
+   wallJumpGravityDelay = 50;
 
    // Sprinting
    sprintForce = 50.0f * 9.0f;
@@ -808,6 +819,26 @@ void PlayerData::initPersistFields()
          "jumps are in the direction of the ground normal so long as the player is not "
          "directly facing the surface.  If the player is directly facing the surface, then "
          "they will jump straight up.\n" );
+      // CH: Added double jumping
+      addField("enableDoubleJump", TypeBool, Offset(doubleJumpEnabled, PlayerData),
+         "@brief Enables double jumping.\n\n");
+      addField("doubleJumpDelay", TypeS32, Offset(doubleJumpDelay, PlayerData),
+         "@brief Delay time (in ticks) before player can double jump.\n\n");
+      addField("doubleJumpForce", TypeF32, Offset(doubleJumpForce, PlayerData),
+         "@brief Force used to accelerate the player when double jumping.\n\n");
+      addField("doubleJumpMinHeight", TypeF32, Offset(doubleJumpMinHeight, PlayerData),
+         "@brief Min height before double can is allowed.\n\n");
+      addField("doubleJumpMaxHeight", TypeF32, Offset(doubleJumpMaxHeight, PlayerData),
+         "@brief Max height before double jump is disabled.\n\n");
+      // CH: Added wall jumping
+      addField("wallJumpDelay", TypeS32, Offset(wallJumpDelay, PlayerData),
+         "@brief Delay time (in ticks) before player can wall jump again.\n\n");
+      addField("wallJumpForce", TypeF32, Offset(wallJumpForce, PlayerData),
+         "@brief Force used when player wall jumps.\n\n");
+      addField("wallJumpForceZScalar", TypeF32, Offset(wallJumpForceZScalar, PlayerData),
+         "@brief Scalar for z force.\n\n");
+      addField("wallJumpGravityDelay", TypeS32, Offset(wallJumpGravityDelay, PlayerData),
+         "@brief Delay time (in ticks) before gravity resets after a wall jump.\n\n");
    
    endGroup( "Movement: Jumping" );
    
@@ -1227,6 +1258,17 @@ void PlayerData::packData(BitStream* stream)
    stream->write(maxJumpSpeed);
    stream->write(jumpSurfaceAngle);
    stream->writeInt(jumpDelay,JumpDelayBits);
+   // CH: Added double jumping
+   stream->writeFlag(doubleJumpEnabled);
+   stream->write(doubleJumpDelay);
+   stream->write(doubleJumpForce);
+   stream->write(doubleJumpMinHeight);
+   stream->write(doubleJumpMaxHeight);
+   // CH: Added wall jumping
+   stream->writeInt(wallJumpDelay,JumpDelayBits);
+   stream->write(wallJumpForce);
+   stream->write(wallJumpForceZScalar);
+   stream->writeInt(wallJumpGravityDelay, JumpDelayBits);
 
    // Sprinting
    stream->write(sprintForce);
@@ -1408,6 +1450,17 @@ void PlayerData::unpackData(BitStream* stream)
    stream->read(&maxJumpSpeed);
    stream->read(&jumpSurfaceAngle);
    jumpDelay = stream->readInt(JumpDelayBits);
+   // CH: Added double jumping
+   doubleJumpEnabled = stream->readFlag();
+   stream->read(&doubleJumpDelay);
+   stream->read(&doubleJumpForce);
+   stream->read(&doubleJumpMinHeight);
+   stream->read(&doubleJumpMaxHeight);
+   // CH: Added wall jumping
+   wallJumpDelay = stream->readInt(JumpDelayBits);
+   stream->read(&wallJumpForce);
+   stream->read(&wallJumpForceZScalar);
+   wallJumpGravityDelay = stream->readInt(JumpDelayBits);
 
    // Sprinting
    stream->read(&sprintForce);
@@ -1616,6 +1669,12 @@ Player::Player()
    mJumpDelay = 0;
    mJumpSurfaceLastContact = 0;
    mJumpSurfaceNormal.set(0.0f, 0.0f, 1.0f);
+   // CH: Added double jumping
+   mDoubleJumped = false;
+   // CH: Added wall jumping
+   mWallJumpDelay = 0;
+   mWallJumpGravityDelay = 0;
+
    mControlObject = 0;
    dMemset( mSplashEmitter, 0, sizeof( mSplashEmitter ) );
 
@@ -2206,6 +2265,14 @@ void Player::processTick(const Move* move)
          }
       }
    }
+
+   // CH: Added wall jumping
+   if (mWallJumpDelay > 0)
+      mWallJumpDelay--;
+   if (mWallJumpGravityDelay > 0)
+      mWallJumpGravityDelay--;
+   else
+      mGravity = -20.0f;
 }
 
 void Player::interpolateTick(F32 dt)
@@ -3099,7 +3166,77 @@ void Player::updateMove(const Move* move)
    // Acceleration from Jumping
    // While BLOCK_USER_CONTROL is set in anim_clip_flags, the user won't be able to
    // make the player character jump.
-   if (move->trigger[sJumpTrigger] && canJump() && !isAnimationLocked())
+   // CH: Added double jumping
+   if (jumpSurface)
+   {
+      mDoubleJumped = false;
+   }
+   Point3F pos;
+   getTransform().getColumn(3, &pos);
+   // Acceleration from Jumping  
+   if ((move->trigger[2] && !isMounted() && canJump()) || ((mDataBlock->doubleJumpEnabled == true) && (move->trigger[2]) && (mDoubleJumped == false) && (mContactTimer > mDataBlock->doubleJumpDelay) && (pos.z > mDataBlock->doubleJumpMinHeight) && (pos.z < mDataBlock->doubleJumpMaxHeight)))
+   {
+
+      // Scale the jump impulse base on maxJumpSpeed  
+      F32 zSpeedScale = mVelocity.z;
+      if (zSpeedScale <= mDataBlock->maxJumpSpeed)
+      {
+         zSpeedScale = (zSpeedScale <= mDataBlock->minJumpSpeed) ? 1 :
+            1 - (zSpeedScale - mDataBlock->minJumpSpeed) /
+            (mDataBlock->maxJumpSpeed - mDataBlock->minJumpSpeed);
+
+         // Desired jump direction  
+         VectorF pv = moveVec;
+         F32 len = pv.len();
+         if (len > 0)
+            pv *= 1 / len;
+
+         // We want to scale the jump size by the player size, somewhat  
+         // in reduced ratio so a smaller player can jump higher in  
+         // proportion to his size, than a larger player.  
+         F32 scaleZ = (getScale().z * 0.25) + 0.75;
+
+         // If we are facing into the surface jump up, otherwise  
+         // jump away from surface.  
+         F32 dot = mDot(pv, mJumpSurfaceNormal);
+         F32 impulse = mDataBlock->jumpForce / mMass;
+         F32 doubleJumpImpulse = mDataBlock->doubleJumpForce;
+         if (dot <= 0)
+         {
+            if (jumpSurface)
+            {
+               acc.z += mJumpSurfaceNormal.z * scaleZ * impulse * zSpeedScale;
+            }
+            else
+            {
+               acc.z += scaleZ * doubleJumpImpulse;
+               mDoubleJumped = true;
+            }
+         }
+         else
+         {
+            acc.x += pv.x * impulse * dot;
+            acc.y += pv.y * impulse * dot;
+            if (jumpSurface)
+            {
+               acc.z += mJumpSurfaceNormal.z * scaleZ * impulse * zSpeedScale;
+            }
+            else
+            {
+               acc.z += scaleZ * doubleJumpImpulse;
+               mDoubleJumped = true;
+            }
+         }
+
+         mJumpDelay = mDataBlock->jumpDelay;
+         mEnergy -= mDataBlock->jumpEnergyDrain;
+
+         setActionThread((mVelocity.len() < 0.5) ?
+            PlayerData::StandJumpAnim : PlayerData::JumpAnim, true, false, true);
+         mJumpSurfaceLastContact = JumpSkipContactsMax;
+      }
+   }
+   /*if (move->trigger[sJumpTrigger] && canJump() && !isAnimationLocked())
    {
       // Scale the jump impulse base on maxJumpSpeed
       F32 zSpeedScale = mVelocity.z;
@@ -3155,6 +3292,7 @@ void Player::updateMove(const Move* move)
          setMaskBits(TriggerMask);
       }
    }
+   */
    else
    {
       if (jumpSurface) 
@@ -3165,6 +3303,53 @@ void Player::updateMove(const Move* move)
       }
       else
          mJumpSurfaceLastContact++;
+   }
+
+   // CH: Added wall jumping
+   // this will push a player up and away from a vertical surface if the player isn't falling too fast
+   if (move->trigger[sJumpTrigger] && !runSurface && !jumpSurface && !mFalling && mWallJumpDelay == 0)
+   {
+      getContainer()->initRadiusSearch(pos + Point3F(0.0f, 0.0f, 0.5f), 1.0f, StaticObjectType);
+      SceneObject* obj = getContainer()->containerSearchNextObject();
+      if (obj != NULL)
+      {
+         // reduce gravity temporarily, will be reset after (mDataBlock->wallJumpGravityDelay) ticks
+         mGravity = 0.0f;
+
+         // attempt to repel off of an object we're looking at (within a short range)
+         RayInfo ri;
+         Point3F rEnd = mObjToWorld.getForwardVector();
+         rEnd *= 4.0f; // TBD: make this tweakable?
+         rEnd += pos;
+
+         Point3F repelDir;
+
+         bool hit = getContainer()->castRay(pos, rEnd, StaticObjectType, &ri);
+         if (!hit)
+            // if we didn't hit anything try another raycast against the mesh geometry instead of the collision mesh
+            // this is slower but shouldn't happen often enough to cause problems and makes my life easier for now
+            hit = getContainer()->castRayRendered(pos, rEnd, StaticObjectType, &ri);
+
+         if (hit)
+         {
+            // if we're looking at the object we're repeling off of, the push direction will be up & away from the object's surface
+            repelDir = ri.normal;
+         }
+         else
+         {
+            // if no object was hit with the raycast, we're still colliding with a wall but not looking at it, so just jump off in the direction we're looking
+            repelDir = mObjToWorld.getForwardVector();
+         }
+
+         repelDir *= (mDataBlock->wallJumpForce);
+         repelDir.z = (mDataBlock->wallJumpForce * mDataBlock->wallJumpForceZScalar);
+         repelDir += mVelocity;
+
+         applyImpulse(pos, repelDir);
+
+         mWallJumpDelay = mDataBlock->wallJumpDelay;
+         mWallJumpGravityDelay = mDataBlock->wallJumpGravityDelay;
+      }
    }
 
    if (move->trigger[sJumpJetTrigger] && !isMounted() && canJetJump())
@@ -6182,6 +6367,11 @@ void Player::writePacketData(GameConnection *connection, BitStream *stream)
       stream->writeInt(mRecoverTicks,PlayerData::RecoverDelayBits);
    if (stream->writeFlag(mJumpDelay > 0))
       stream->writeInt(mJumpDelay,PlayerData::JumpDelayBits);
+   // CH: Added wall jumping
+   if (stream->writeFlag(mWallJumpDelay > 0))
+      stream->writeInt(mWallJumpDelay, PlayerData::JumpDelayBits);
+   if (stream->writeFlag(mWallJumpGravityDelay > 0))
+      stream->writeInt(mWallJumpGravityDelay, PlayerData::JumpDelayBits);
 
    Point3F pos;
    getTransform().getColumn(3,&pos);
@@ -6238,6 +6428,15 @@ void Player::readPacketData(GameConnection *connection, BitStream *stream)
       mJumpDelay = stream->readInt(PlayerData::JumpDelayBits);
    else
       mJumpDelay = 0;
+   // CH: Added wall jumping
+   if (stream->readFlag())
+      mWallJumpDelay = stream->readInt(PlayerData::JumpDelayBits);
+   else
+      mWallJumpDelay = 0;
+   if (stream->readFlag())
+      mWallJumpGravityDelay = stream->readInt(PlayerData::JumpDelayBits);
+   else
+      mWallJumpGravityDelay = 0;
 
    Point3F pos,rot;
    if (stream->readFlag()) {
@@ -6337,6 +6536,9 @@ U32 Player::packUpdate(NetConnection *con, U32 mask, BitStream *stream)
    if (stream->writeFlag(mask & MoveMask))
    {
       stream->writeFlag(mFalling);
+
+      // CH: Added double jumping
+      stream->writeFlag(mDoubleJumped);
 
       stream->writeFlag(mSwimming);
       stream->writeFlag(mJetting);  
@@ -6447,6 +6649,9 @@ void Player::unpackUpdate(NetConnection *con, BitStream *stream)
    if (stream->readFlag()) {
       mPredictionCount = sMaxPredictionTicks;
       mFalling = stream->readFlag();
+
+      // CH: Added double jumping
+      mDoubleJumped = stream->readFlag();
  
       mSwimming = stream->readFlag();
       mJetting = stream->readFlag();  
