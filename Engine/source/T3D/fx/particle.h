@@ -35,7 +35,7 @@
 #include "gfx/gfxTextureHandle.h"
 #endif
 
-#define MaxParticleSize 50.0
+#define MaxParticleSize 1000.0
 
 struct Particle;
 
