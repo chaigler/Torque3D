@@ -362,8 +362,12 @@ void SFXWorld< NUM_DIMENSIONS, Object >::_onScopeIn( Object object )
    while( iter != mScopeStack.end() && iter->mSortValue >= sortValue )
       ++ iter;
       
-   // Insert the object into the stack.
-   
+   // If the object is already on the scope stack, do not add it again
+   S32 index = _findScope(object);
+   if (index != -1)
+      return;
+
+   // Insert the object into the stack.   
    mScopeStack.insert( iter, Scope( sortValue, object ) );
 }
 
