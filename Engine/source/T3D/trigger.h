@@ -127,6 +127,7 @@ class Trigger : public GameBase
    void onRemove();
    void onDeleteNotify(SimObject*);
    void inspectPostApply();
+   void testObjects();
 
    // NetObject
    U32  packUpdate  (NetConnection *conn, U32 mask, BitStream* stream);
