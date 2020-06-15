@@ -78,6 +78,10 @@ ConsoleDocClass( ScatterSky,
 
 IMPLEMENT_CO_NETOBJECT_V1(ScatterSky);
 
+/// The color used to clear the canvas.
+/// @see GuiCanvas
+extern ColorI gCanvasClearColor;
+
 const F32 ScatterSky::smEarthRadius = (6378.0f * 1000.0f);
 const F32 ScatterSky::smAtmosphereRadius = 200000.0f;
 const F32 ScatterSky::smViewerHeight = 1.0f;
@@ -1193,6 +1197,10 @@ void ScatterSky::_interpolateColors()
 
    mAmbientColor.interpolate( mAmbientColor, mNightColor, mCurves[3].getVal( mTimeOfDay ) );//mNightInterpolant );
    mSunColor.interpolate( mSunColor, mMoonTint, mCurves[3].getVal( mTimeOfDay ) );//mNightInterpolant );
+
+   LinearColorF interpCanvasColor = mFogColor;
+   //interpCanvasColor.interpolate(mNightFogColor, mFogColor, mCurves[3].getVal(mTimeOfDay));
+   gCanvasClearColor = interpCanvasColor.toColorI();
 }
 
 void ScatterSky::_getSunColor( LinearColorF *outColor )
