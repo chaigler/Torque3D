@@ -239,7 +239,7 @@ Precipitation::Precipitation()
 
    mDropHitMask = 0;
 
-   mDropSize          = 0.5;
+   mDropSize          = Point2F(0.5, 0.5);
    mSplashSize        = 0.5;
    mUseTrueBillboards = false;
    mSplashMS          = 250;
@@ -269,6 +269,7 @@ Precipitation::Precipitation()
    mRotateWithCamVel = true;
 
    mDoCollision = true;
+   mUseFastCollision = false;
    mDropHitPlayers = false;
    mDropHitVehicles = false;
 
@@ -356,7 +357,7 @@ void Precipitation::initPersistFields()
 
    addGroup("Rendering");
 
-      addField( "dropSize", TypeF32, Offset(mDropSize, Precipitation),
+      addField( "dropSize", TypePoint2F, Offset(mDropSize, Precipitation),
          "Size of each drop of precipitation. This will scale the texture." );
 
       addField( "splashSize", TypeF32, Offset(mSplashSize, Precipitation),
@@ -408,6 +409,9 @@ void Precipitation::initPersistFields()
          "will produce a simple splash animation.\n"
          "@note This can be expensive as each drop will perform a raycast when "
          "it is created to determine where it will hit." );
+
+      addField("useFastCollision", TypeBool, Offset(mUseFastCollision, Precipitation),
+         "@brief Drops do a single raycast at creation time instead of every tick.\n\n");
 
       addField( "hitPlayers", TypeBool, Offset(mDropHitPlayers, Precipitation),
          "Allow drops to collide with Player objects; only valid if #doCollision is true." );
@@ -526,6 +530,16 @@ DefineEngineMethod(Precipitation, setTurbulence, void, (F32 max, F32 speed, F32 
 //--------------------------------------------------------------------------
 // Backend
 //--------------------------------------------------------------------------
+
+IMPLEMENT_CALLBACK(Precipitation, onStormStart, void, (U32 totalTime), (totalTime),
+   "Called when this Precipitation starts a storm.\n"
+   "@param (F32)totalTime - Total time in ms storm will be active.\n"
+);
+
+IMPLEMENT_CALLBACK(Precipitation, onStormEnd, void, (), (),
+   "Called when this Precipitation ends a storm.\n"
+);
+
 bool Precipitation::onAdd()
 {
    if(!Parent::onAdd())
@@ -656,7 +670,7 @@ U32 Precipitation::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
 
    if (stream->writeFlag(mask & DataMask))
    {
-      stream->write(mDropSize);
+      mathWrite(*stream, mDropSize);
       stream->write(mSplashSize);
       stream->write(mSplashMS);
       stream->write(mDropAnimateMS);
@@ -678,6 +692,7 @@ U32 Precipitation::packUpdate(NetConnection* con, U32 mask, BitStream* stream)
       stream->writeFlag(mReflect);
       stream->writeFlag(mRotateWithCamVel);
       stream->writeFlag(mDoCollision);
+      stream->writeFlag(mUseFastCollision);
       stream->writeFlag(mDropHitPlayers);
       stream->writeFlag(mDropHitVehicles);
       stream->writeFlag(mUseTrueBillboards);
@@ -723,7 +738,7 @@ void Precipitation::unpackUpdate(NetConnection* con, BitStream* stream)
    U32 oldDrops = U32(mNumDrops * mPercentage);
    if (stream->readFlag())
    {
-      stream->read(&mDropSize);
+      mathRead(*stream, &mDropSize);
       stream->read(&mSplashSize);
       stream->read(&mSplashMS);
       stream->read(&mDropAnimateMS);
@@ -745,6 +760,7 @@ void Precipitation::unpackUpdate(NetConnection* con, BitStream* stream)
       mReflect = stream->readFlag();
       mRotateWithCamVel = stream->readFlag();
       mDoCollision = stream->readFlag();
+      mUseFastCollision = stream->readFlag();
       mDropHitPlayers = stream->readFlag();
       mDropHitVehicles = stream->readFlag();
       mUseTrueBillboards = stream->readFlag();
@@ -1033,6 +1049,8 @@ void Precipitation::spawnDrop(Raindrop *drop)
    drop->valid = true;
    drop->time = Platform::getRandom() * M_2PI;
    drop->mass = Platform::getRandom() * (mMaxMass - mMinMass) + mMinMass;
+   drop->fastCollisionComplete = false;
+
    PROFILE_END();
 }
 
@@ -1088,6 +1106,8 @@ void Precipitation::wrapDrop(Raindrop *drop, const Box3F &box, const U32 currTim
    }
 }
 
+// TODO: This auto-kills rain drops once their z reaches -1000 if collision is disabled or not triggered.
+// Should be limited to the size of the precipitation box instead?
 void Precipitation::findDropCutoff(Raindrop *drop, const Box3F &box, const VectorF &windVel)
 {
    PROFILE_START(PrecipFindDropCutoff);
@@ -1109,21 +1129,29 @@ void Precipitation::findDropCutoff(Raindrop *drop, const Box3F &box, const Vecto
 
       // Look for a collision... make sure we don't 
       // collide with backfaces.
-      RayInfo rInfo;
-      if (getContainer()->castRay(start, end, mDropHitMask, &rInfo))
+      if ((!mUseFastCollision) || (mUseFastCollision && !drop->fastCollisionComplete))
       {
-         // TODO: Add check to filter out hits on backfaces.
+         RayInfo rInfo;
+         if (getContainer()->castRay(start, end, mDropHitMask, &rInfo))
+         {
+            // TODO: Add check to filter out hits on backfaces.
 
-         if (!mFollowCam)
-            mWorldToObj.mulP(rInfo.point);
+            if (!mFollowCam)
+               mWorldToObj.mulP(rInfo.point);
 
-         drop->hitPos = rInfo.point;
-         drop->hitType = rInfo.object->getTypeMask();
+            drop->hitPos = rInfo.point;
+            drop->hitType = rInfo.object->getTypeMask();
+         }
+         else
+            drop->hitPos = Point3F(0, 0, -1000);
       }
-      else
-         drop->hitPos = Point3F(0,0,-1000);
 
       drop->valid = drop->position.z > drop->hitPos.z;
+
+      // Raycast is done, if fast collision is enabled then save the result
+      // so we can skip the above code in future ticks
+      if (mUseFastCollision)
+         drop->fastCollisionComplete = true;
    }
    else
    {
@@ -1218,6 +1246,9 @@ void Precipitation::modifyStorm(F32 pct, U32 ms)
    mStormData.startTime = Platform::getVirtualMilliseconds();
    mStormData.startPct = mPercentage;
    mStormData.valid = true;
+
+   // Notify the script system of the storm starting.
+   onStormStart_callback(ms);
 }
 
 void Precipitation::setTurbulence(F32 max, F32 speed, U32 ms)
@@ -1307,6 +1338,9 @@ void Precipitation::processTick(const Move *)
       {
          mPercentage = mStormData.endPct;
          mStormData.valid = false;
+
+         // Notify the script system of the storm ending.
+         onStormEnd_callback();
       }
       else
          mPercentage = mStormData.startPct * (1-t) + mStormData.endPct * t;
@@ -1549,7 +1583,6 @@ void Precipitation::renderObject(ObjectRenderInst *ri, SceneRenderState *state, 
    }
    const VectorF windVel = getWindVelocity();
    const bool useBillboards = mUseTrueBillboards;
-   const F32 dropSize = mDropSize;
 
    Point3F pos;
    VectorF orthoDir, velocity, right, up, rightUp(0.0f, 0.0f, 0.0f), leftUp(0.0f, 0.0f, 0.0f);
@@ -1571,8 +1604,8 @@ void Precipitation::renderObject(ObjectRenderInst *ri, SceneRenderState *state, 
       }
       right.normalize();
       up.normalize();
-      right *= mDropSize;
-      up    *= mDropSize;
+      right *= mDropSize.x;
+      up    *= mDropSize.y;
       rightUp = right + up;
       leftUp = -right + up;
    }
@@ -1713,8 +1746,8 @@ void Precipitation::renderObject(ObjectRenderInst *ri, SceneRenderState *state, 
          right.normalize();
          up    = mCross(orthoDir, right) * 0.5 - velocity * 0.5;
          up.normalize();
-         right *= dropSize;
-         up    *= dropSize;
+         right *= mDropSize.x;
+         up    *= mDropSize.y;
          rightUp = right + up;
          leftUp = -right + up;
       }

@@ -78,6 +78,7 @@ struct Raindrop
 
    Point3F  hitPos;        ///< Point at which the drop will collide with something
    U32      hitType;       ///< What kind of object the drop will hit
+   bool     fastCollisionComplete; ///< True if fast collision check has been completed for this drop
 
    Raindrop *nextSplashDrop;  ///< Linked list cruft for easily adding/removing stuff from the splash list
    Raindrop *prevSplashDrop;  ///< Same as next but previous!
@@ -100,6 +101,7 @@ struct Raindrop
       animStartTime = 0;
       hitType = 0;
       hitPos = Point3F(0,0,0);
+      fastCollisionComplete = false;
    }
 };
 
@@ -131,7 +133,7 @@ class Precipitation : public GameBase
    //console exposed variables
    bool mFollowCam;                 ///< Does the system follow the camera or stay where it's placed.
 
-   F32  mDropSize;                  ///< Droplet billboard size
+   Point2F  mDropSize;                  ///< Droplet billboard size
    F32  mSplashSize;                ///< Splash billboard size
    bool mUseTrueBillboards;         ///< True to use true billboards, false for axis-aligned billboards
    S32  mSplashMS;                  ///< How long in milliseconds a splash will last
@@ -173,6 +175,7 @@ class Precipitation : public GameBase
                                  ///< This is useful for "streak" type drops
 
    bool mDoCollision;            ///< Whether or not to do collision
+   bool mUseFastCollision;       ///< Does single raycast at initial drop creation time instead of every tick
    bool mDropHitPlayers;         ///< Should drops collide with players
    bool mDropHitVehicles;        ///< Should drops collide with vehicles
 
@@ -269,6 +272,9 @@ class Precipitation : public GameBase
    bool onNewDataBlock( GameBaseData *dptr, bool reload );
    DECLARE_CONOBJECT(Precipitation);
    static void initPersistFields();
+
+   DECLARE_CALLBACK(void, onStormStart, (U32 totalTime));
+   DECLARE_CALLBACK(void, onStormEnd, ());
    
    U32  packUpdate(NetConnection*, U32 mask, BitStream* stream);
    void unpackUpdate(NetConnection*, BitStream* stream);
