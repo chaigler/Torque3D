@@ -1,0 +1,8 @@
+<LevelAsset
+    canSave="true"
+    canSaveDynamicFields="true"
+    AssetName="ObservatoryIsland"
+    FriendlyName="Observatory Island"
+    LevelFile="data/pkg/levels/ObservatoryIsland.mis"
+    Description="My home, the island observatory."
+    VersionId="1" />
