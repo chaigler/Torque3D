@@ -1146,7 +1146,7 @@ void Precipitation::findDropCutoff(Raindrop *drop, const Box3F &box, const Vecto
             drop->hitPos = Point3F(0, 0, -1000);
       }
 
-      drop->valid = drop->position.z > drop->hitPos.z;
+      drop->valid = drop->position.z > drop->hitPos.z + mDropSize.y;
 
       // Raycast is done, if fast collision is enabled then save the result
       // so we can skip the above code in future ticks
@@ -1315,10 +1315,11 @@ void Precipitation::interpolateTick(F32 delta)
       else
          curr->renderPosition = curr->position + windVel / curr->mass;
 
-      curr->renderPosition.z -= dt * curr->velocity;
+      //curr->renderPosition.z -= dt * curr->velocity;
 
       curr = curr->next;
    }
+ 
    PROFILE_END();
 }
 
@@ -1448,7 +1449,7 @@ void Precipitation::processTick(const Move *)
       wrapDrop(curr, box, currTime, windVel);
 
       // Did the drop pass below the hit position?
-      if (curr->valid && curr->position.z < curr->hitPos.z)
+      if (curr->valid && (curr->position.z - mDropSize.y) < curr->hitPos.z)
       {
          // If this drop was to hit a player or vehicle double
          // check to see if the object has moved out of the way.
@@ -1618,14 +1619,14 @@ void Precipitation::renderObject(ObjectRenderInst *ri, SceneRenderState *state, 
    if ( mUseLighting )
    {
       const LightInfo *sunlight = LIGHTMGR->getSpecialLight(LightManager::slSunLightType);
-      ambient = sunlight->getColor();
+      ambient = sunlight->getAmbient();
    }
 
    if ( mGlowIntensity.red > 0 ||
       mGlowIntensity.green > 0 ||
       mGlowIntensity.blue > 0 )
    {
-      ambient *= mGlowIntensity;
+      ambient *= (mGlowIntensity * 2.0f);
    }
 
    // Setup render state
