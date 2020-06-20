@@ -640,7 +640,7 @@ void ShadowMapParams::_validate()
    // We apply the hardware specific limits during 
    // shadow rendering.
    //
-   U32 maxTexSize = 4096;
+   U32 maxTexSize = 8192; // CH: Was 4096. Increased to allow for 4096 shadowmap size @ 4 splits.
 
    if ( mLight->getType() == LightInfo::Vector )
    {
@@ -650,9 +650,9 @@ void ShadowMapParams::_validate()
       // based on the split count to keep the total
       // shadow texture size within 4096.
       if ( numSplits == 2 || numSplits == 4 )
-         maxTexSize = 2048;
+         maxTexSize = 4096; // CH: Was 2048
       if ( numSplits == 3 )
-         maxTexSize = 1024;
+         maxTexSize = 2048; // CH: Was 1024
    }
    else
       numSplits = 1;
