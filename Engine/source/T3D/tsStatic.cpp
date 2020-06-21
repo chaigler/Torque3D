@@ -650,8 +650,11 @@ void TSStatic::prepRenderImage( SceneRenderState* state )
       return;
 
 
-   if ( mForceDetail == -1 )
-      mShapeInstance->setDetailFromDistance( state, dist * invScale );
+   if (mForceDetail == -1)
+      if (mShapeInstance->smUseSimpleDistanceLOD)
+         mShapeInstance->setDetailFromDistance(state, getRenderPosition());
+      else
+         mShapeInstance->setDetailFromDistance( state, dist * invScale );
    else
       mShapeInstance->setCurrentDetail( mForceDetail );
 

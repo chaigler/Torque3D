@@ -482,6 +482,8 @@ protected:
    static F32 smLastScaledDistance;
    static F32 smLastPixelSize;
 
+   static bool smUseSimpleDistanceLOD;
+
    /// Debugging
    /// @{
 
@@ -562,10 +564,12 @@ protected:
                                  const Point3F &pos, 
                                  const Point3F &scale );
 
+
    /// Selects the current detail level using the scaled
    /// distance between your object and the camera.
    ///
    /// @see TSShape::Detail.
+   S32 setDetailFromDistance(const SceneRenderState* state, const Point3F& pos);
    S32 setDetailFromDistance( const SceneRenderState *state, F32 scaledDist );
 
    /// Sets the current detail level using the legacy screen error metric.

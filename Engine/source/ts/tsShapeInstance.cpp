@@ -75,6 +75,10 @@ MODULE_BEGIN( TSShapeInstance )
          "@brief Enables mesh instancing on non-skin meshes that have less that this count of verts.\n"
          "The default value is 200.  Higher values can degrade performance.\n"
          "@ingroup Rendering\n" );
+
+      Con::addVariable("$TS::useSimpleDistanceLOD", TypeBool, &TSShapeInstance::smUseSimpleDistanceLOD,
+         "@brief Causes LOD details to be selected based on distance to the camera instead of size on screen.\n"
+         "@ingroup Rendering\n");
    }
 
 MODULE_END;
@@ -87,6 +91,8 @@ S32                           TSShapeInstance::smNumSkipRenderDetails = 0;
 F32                           TSShapeInstance::smLastScreenErrorTolerance = 0.0f;
 F32                           TSShapeInstance::smLastScaledDistance = 0.0f;
 F32                           TSShapeInstance::smLastPixelSize = 0.0f;
+
+bool                          TSShapeInstance::smUseSimpleDistanceLOD = false;
 
 Vector<QuatF>                 TSShapeInstance::smNodeCurrentRotations(__FILE__, __LINE__);
 Vector<Point3F>               TSShapeInstance::smNodeCurrentTranslations(__FILE__, __LINE__);
@@ -608,6 +614,35 @@ void TSShapeInstance::setCurrentDetail( S32 dl, F32 intraDL )
          mCurrentIntraDetailLevel = 1.0f;
       }
    }
+}
+
+// CH: This version is only used if $TS::useSimpleDistanceLOD is set to true.
+// CH: This version simply selects a detail level based on the distance from the camera.
+S32 TSShapeInstance::setDetailFromDistance(const SceneRenderState* state, const Point3F &pos)
+{
+   PROFILE_SCOPE(TSShape_setDetailFromDistanceSIMPLE);
+
+   VectorF camVec = pos - state->getDiffuseCameraPosition();
+   F32 dist = getMax(camVec.len(), 0.01f);
+
+   // Clamp it to an acceptable range for the lookup table.
+   U32 index = (U32)mClampF(dist, 0, mShape->mDetailLevelLookup.size() - 1);
+
+   // Check the lookup table for the detail and intra detail levels.
+   mShape->mDetailLevelLookup[index].get(mCurrentDetailLevel, mCurrentIntraDetailLevel);
+
+   // Restrict the chosen detail level by cutoff value.
+   if (smNumSkipRenderDetails > 0 && mCurrentDetailLevel >= 0)
+   {
+      S32 cutoff = getMin(smNumSkipRenderDetails, mShape->mSmallestVisibleDL);
+      if (mCurrentDetailLevel < cutoff)
+      {
+         mCurrentDetailLevel = cutoff;
+         mCurrentIntraDetailLevel = 1.0f;
+      }
+   }
+
+   return mCurrentDetailLevel;
 }
 
 S32 TSShapeInstance::setDetailFromPosAndScale(  const SceneRenderState *state,
