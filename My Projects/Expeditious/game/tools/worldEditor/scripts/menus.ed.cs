@@ -340,6 +340,7 @@ function EditorGui::buildMenus(%this)
       item[1] = "Profiler" TAB "ctrl F2" TAB "showMetrics(true);";
 	  item[2] = "Torque SimView" TAB "" TAB "tree();";
       item[3] = "Make Selected a Mesh" TAB "" TAB "makeSelectedAMesh();";
+      item[4] = "Batch Copy Properties" TAB "p" TAB "Canvas.pushDialog(ETool_CopyProperties);";
    };
    %this.menuBar.insert(%toolsMenu);
       
