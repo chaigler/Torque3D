@@ -1,0 +1,25 @@
+# CMake generation dependency list for this directory.
+C:/Program Files/CMake/share/cmake-3.16/Modules/BasicConfigVersion-AnyNewerVersion.cmake.in
+C:/Program Files/CMake/share/cmake-3.16/Modules/CMakeDependentOption.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CMakePackageConfigHelpers.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckCCompilerFlag.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckCSourceCompiles.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckCSourceRuns.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckFunctionExists.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckIncludeFile.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckIncludeFileCXX.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckIncludeFiles.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckLibraryExists.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckStructHasMember.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckSymbolExists.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/CheckTypeSize.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/FindPackageHandleStandardArgs.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/FindPackageMessage.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/FindPkgConfig.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/GNUInstallDirs.cmake
+C:/Program Files/CMake/share/cmake-3.16/Modules/WriteBasicConfigVersionFile.cmake
+C:/Users/Chris/Google Drive/devBackup/Torque3D/Engine/lib/sdl/CMakeLists.txt
+C:/Users/Chris/Google Drive/devBackup/Torque3D/Engine/lib/sdl/cmake/macros.cmake
+C:/Users/Chris/Google Drive/devBackup/Torque3D/Engine/lib/sdl/cmake/sdlchecks.cmake
+C:/Users/Chris/Google Drive/devBackup/Torque3D/Engine/lib/sdl/cmake_uninstall.cmake.in
+C:/Users/Chris/Google Drive/devBackup/Torque3D/Engine/lib/sdl/include/SDL_config.h.cmake

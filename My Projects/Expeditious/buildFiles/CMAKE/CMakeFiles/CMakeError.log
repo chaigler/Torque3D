@@ -1,0 +1,563 @@
+Performing C SOURCE FILE Test HAVE_STD_C11 failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_abc87.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+cl : command line warning D9002: ignoring unknown option '-std=c11' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_abc87.vcxproj]
+  src.c
+  cmTC_abc87.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_abc87.exe
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test HAVE_STD_C99 failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_5acda.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+cl : command line warning D9002: ignoring unknown option '-std=c99' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_5acda.vcxproj]
+  src.c
+  cmTC_5acda.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_5acda.exe
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C++ SOURCE FILE Test HAVE_STD_CXX11 failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_9dcc9.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+cl : command line warning D9002: ignoring unknown option '-std=c++11' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_9dcc9.vcxproj]
+  src.cxx
+  cmTC_9dcc9.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_9dcc9.exe
+
+
+Source file was:
+int main() { return 0; }
+Performing C SOURCE FILE Test HAVE_RESTRICT failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_cc200.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,15): error C2061: syntax error: identifier 'foo' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_cc200.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,15): error C2059: syntax error: ';' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_cc200.vcxproj]
+
+
+Source file was:
+int *restrict foo;
+                             int main() {return 0;}
+Performing C SOURCE FILE Test HAVE_LIBATOMIC failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_a5b27.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,10): fatal error C1083: Cannot open include file: 'stdatomic.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_a5b27.vcxproj]
+
+
+Source file was:
+#include <stdatomic.h>
+int _Atomic foo = ATOMIC_VAR_INIT(0);
+int main()
+{
+    return atomic_fetch_add(&foo, 2);
+}
+Determining if the function __android_log_print exists in the log failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_5d8b3.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+LINK : fatal error LNK1104: cannot open file 'log.lib' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_5d8b3.vcxproj]
+
+
+
+Performing C SOURCE FILE Test HAVE_C11_STATIC_ASSERT failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_2ebdb.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(3,20): warning C4013: '_Static_assert' undefined; assuming extern returning int [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_2ebdb.vcxproj]
+src.obj : error LNK2019: unresolved external symbol _Static_assert referenced in function main [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_2ebdb.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_2ebdb.exe : fatal error LNK1120: 1 unresolved externals [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_2ebdb.vcxproj]
+
+
+Source file was:
+int main()
+ {
+     _Static_assert(sizeof(int) == sizeof(int), "What");
+     return 0;
+ }
+Performing C SOURCE FILE Test HAVE_C11_ALIGNAS failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_9ef14.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,10): error C2143: syntax error: missing ')' before 'constant' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_9ef14.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,10): error C2143: syntax error: missing '{' before 'constant' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_9ef14.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,10): error C2059: syntax error: 'constant' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_9ef14.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,12): error C2059: syntax error: ')' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_9ef14.vcxproj]
+
+
+Source file was:
+_Alignas(16) int foo;
+ int main()
+ {
+     return 0;
+ }
+Performing C SOURCE FILE Test HAVE_C11_ATOMIC failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_fc351.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,10): fatal error C1083: Cannot open include file: 'stdatomic.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_fc351.vcxproj]
+
+
+Source file was:
+#include <stdatomic.h>
+ int _Atomic foo = ATOMIC_VAR_INIT(0);
+ int main()
+ {
+     atomic_fetch_add(&foo, 2);
+     return 0;
+ }
+Performing C SOURCE FILE Test HAVE_MSSE_SWITCH failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_539d0.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+cl : command line warning D9002: ignoring unknown option '-msse' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_539d0.vcxproj]
+  src.c
+  cmTC_539d0.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_539d0.exe
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test HAVE_MSSE2_SWITCH failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_c56d7.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+cl : command line warning D9002: ignoring unknown option '-msse2' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_c56d7.vcxproj]
+  src.c
+  cmTC_c56d7.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_c56d7.exe
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test HAVE_MSSE3_SWITCH failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_3430a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+cl : command line warning D9002: ignoring unknown option '-msse3' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_3430a.vcxproj]
+  src.c
+  cmTC_3430a.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_3430a.exe
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test HAVE_MSSE4_1_SWITCH failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_f2f52.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+cl : command line warning D9002: ignoring unknown option '-msse4.1' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_f2f52.vcxproj]
+  src.c
+  cmTC_f2f52.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_f2f52.exe
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test HAVE_MFPU_NEON_SWITCH failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_41f59.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+cl : command line warning D9002: ignoring unknown option '-mfpu=neon' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_41f59.vcxproj]
+  src.c
+  cmTC_41f59.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_41f59.exe
+
+
+Source file was:
+int main(void) { return 0; }
+Performing C SOURCE FILE Test HAVE_GCC_FORMAT failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_55731.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,31): error C2061: syntax error: identifier '__attribute__' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_55731.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,31): error C2059: syntax error: ';' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_55731.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,61): error C2059: syntax error: 'constant' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_55731.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,64): error C2059: syntax error: 'constant' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_55731.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,68): warning C4131: 'format': uses old-style declarator [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_55731.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,68): warning C4431: missing type specifier - int assumed. Note: C no longer supports default-int [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_55731.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,68): warning C4218: nonstandard extension used: must specify at least a storage class or a type [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_55731.vcxproj]
+
+
+Source file was:
+int foo(const char *str, ...) __attribute__((format(printf, 1, 2)));
+                         int main() {return 0;}
+Determining if the include file stdalign.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_c5ca6.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1,10): fatal error C1083: Cannot open include file: 'stdalign.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_c5ca6.vcxproj]
+
+
+
+Determining if the include file dirent.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_ca6bc.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1,10): fatal error C1083: Cannot open include file: 'dirent.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_ca6bc.vcxproj]
+
+
+
+Determining if the include file strings.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_e489b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1,10): fatal error C1083: Cannot open include file: 'strings.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_e489b.vcxproj]
+
+
+
+Determining if the include file cpuid.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_f7db2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1,10): fatal error C1083: Cannot open include file: 'cpuid.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_f7db2.vcxproj]
+
+
+
+Determining if the include file sys/sysconf.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_ec031.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1,10): fatal error C1083: Cannot open include file: 'sys/sysconf.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_ec031.vcxproj]
+
+
+
+Determining if the include file ieeefp.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_4883d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1,10): fatal error C1083: Cannot open include file: 'ieeefp.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_4883d.vcxproj]
+
+
+
+Determining if the function pow exists in the m failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_fda76.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+C:\Program Files\CMake\share\cmake-3.16\Modules\CheckFunctionExists.c(7,3): warning C4391: 'char pow(void)': incorrect return type for intrinsic function, expected 'double' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_fda76.vcxproj]
+C:\Program Files\CMake\share\cmake-3.16\Modules\CheckFunctionExists.c(7,3): warning C4392: 'char pow(void)': incorrect number of arguments for intrinsic function, expected '2' arguments [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_fda76.vcxproj]
+C:\Program Files\CMake\share\cmake-3.16\Modules\CheckFunctionExists.c(17,25): error C2168: 'pow': too few actual parameters for intrinsic function [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_fda76.vcxproj]
+
+
+
+Determining if the function dlopen exists in the dl failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_b679a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+LINK : fatal error LNK1104: cannot open file 'dl.lib' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_b679a.vcxproj]
+
+
+
+Determining if the include file dlfcn.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_ef15c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1,10): fatal error C1083: Cannot open include file: 'dlfcn.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_ef15c.vcxproj]
+
+
+
+Determining if the sysconf exist failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_177c4.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckSymbolExists.c(2,10): fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_177c4.vcxproj]
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <unistd.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef sysconf
+  return ((int*)(&sysconf))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the aligned_alloc exist failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_f87f3.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckSymbolExists.c(8,32): error C2065: 'aligned_alloc': undeclared identifier [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_f87f3.vcxproj]
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stdlib.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef aligned_alloc
+  return ((int*)(&aligned_alloc))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the posix_memalign exist failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_e1bed.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckSymbolExists.c(8,33): error C2065: 'posix_memalign': undeclared identifier [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_e1bed.vcxproj]
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stdlib.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef posix_memalign
+  return ((int*)(&posix_memalign))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the proc_pidpath exist failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_9f069.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckSymbolExists.c(2,10): fatal error C1083: Cannot open include file: 'libproc.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_9f069.vcxproj]
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <libproc.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef proc_pidpath
+  return ((int*)(&proc_pidpath))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the __control87_2 exist failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_61d85.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckSymbolExists.c(8,32): error C2065: '__control87_2': undeclared identifier [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_61d85.vcxproj]
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef __control87_2
+  return ((int*)(&__control87_2))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the function strcasecmp exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_b5e6c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+CheckFunctionExists.obj : error LNK2019: unresolved external symbol strcasecmp referenced in function main [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_b5e6c.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_b5e6c.exe : fatal error LNK1120: 1 unresolved externals [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_b5e6c.vcxproj]
+
+
+
+Determining if the function strncasecmp exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_a646e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+CheckFunctionExists.obj : error LNK2019: unresolved external symbol strncasecmp referenced in function main [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_a646e.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_a646e.exe : fatal error LNK1120: 1 unresolved externals [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_a646e.vcxproj]
+
+
+
+Determining if the getopt exist failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_1fc78.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckSymbolExists.c(2,10): fatal error C1083: Cannot open include file: 'unistd.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_1fc78.vcxproj]
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <unistd.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef getopt
+  return ((int*)(&getopt))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the include file arm_neon.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_b097f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\include\arm_neon.h(21,1): fatal error C1189: #error:  This header is specific to ARM targets [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_b097f.vcxproj]
+
+
+
+Determining if files SLES/OpenSLES.h;SLES/OpenSLES_Android.h exist failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_6e5c6.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  HAVE_SLES_OPENSLES_ANDROID_H.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CheckIncludeFiles\HAVE_SLES_OPENSLES_ANDROID_H.c(2,10): fatal error C1083: Cannot open include file: 'SLES/OpenSLES.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_6e5c6.vcxproj]
+
+
+Source:
+/* */
+#include <SLES/OpenSLES.h>
+#include <SLES/OpenSLES_Android.h>
+
+
+int main(void){return 0;}
+
+Determining if the include file pthread.h exists failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_4d8ba.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\CheckIncludeFile.c(1,10): fatal error C1083: Cannot open include file: 'pthread.h': No such file or directory [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_4d8ba.vcxproj]
+
+
+
+Performing C SOURCE FILE Test HAVE_XINPUT_GAMEPAD_EX failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_c309a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(4,27): error C2061: syntax error: identifier 'x1' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_c309a.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(4,27): error C2059: syntax error: ';' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_c309a.vcxproj]
+
+
+Source file was:
+
+        #include <windows.h>
+        #include <xinput.h>
+        XINPUT_GAMEPAD_EX x1;
+        int main(int argc, char **argv) { }
+Performing C SOURCE FILE Test HAVE_XINPUT_STATE_EX failed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_2b000.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(4,25): error C2061: syntax error: identifier 's1' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_2b000.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(4,25): error C2059: syntax error: ';' [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_2b000.vcxproj]
+
+
+Source file was:
+
+        #include <windows.h>
+        #include <xinput.h>
+        XINPUT_STATE_EX s1;
+        int main(int argc, char **argv) { }

@@ -1,0 +1,928 @@
+The system is: Windows - 10.0.17134 - AMD64
+Compiling the C compiler identification source file "CMakeCCompilerId.c" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 6/7/2020 7:44:22 PM.
+Project "C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\3.16.0-rc3\CompilerIdC\CompilerIdC.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "Debug\".
+  Creating directory "Debug\CompilerIdC.tlog\".
+InitializeBuildStatus:
+  Creating "Debug\CompilerIdC.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc142.pdb" /Gd /TC /FC /errorReport:queue CMakeCCompilerId.c
+  CMakeCCompilerId.c
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdC.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdC.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdC.lib" /MACHINE:X64 Debug\CMakeCCompilerId.obj
+  CompilerIdC.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\3.16.0-rc3\CompilerIdC\.\CompilerIdC.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_C_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_C_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\bin\Hostx64\x64\cl.exe
+FinalizeBuildStatus:
+  Deleting file "Debug\CompilerIdC.tlog\unsuccessfulbuild".
+  Touching "Debug\CompilerIdC.tlog\CompilerIdC.lastbuildstate".
+Done Building Project "C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\3.16.0-rc3\CompilerIdC\CompilerIdC.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:01.17
+
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.exe"
+
+Compilation of the C compiler identification source "CMakeCCompilerId.c" produced "CompilerIdC.vcxproj"
+
+The C compiler identification is MSVC, found in "C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/3.16.0-rc3/CompilerIdC/CompilerIdC.exe"
+
+Compiling the CXX compiler identification source file "CMakeCXXCompilerId.cpp" succeeded.
+Compiler:  
+Build flags: 
+Id flags:  
+
+The output was:
+0
+Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+Build started 6/7/2020 7:44:24 PM.
+Project "C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\3.16.0-rc3\CompilerIdCXX\CompilerIdCXX.vcxproj" on node 1 (default targets).
+PrepareForBuild:
+  Creating directory "Debug\".
+  Creating directory "Debug\CompilerIdCXX.tlog\".
+InitializeBuildStatus:
+  Creating "Debug\CompilerIdCXX.tlog\unsuccessfulbuild" because "AlwaysCreate" was specified.
+ClCompile:
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\bin\HostX64\x64\CL.exe /c /nologo /W0 /WX- /diagnostics:column /Od /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"Debug\\" /Fd"Debug\vc142.pdb" /Gd /TP /FC /errorReport:queue CMakeCXXCompilerId.cpp
+  CMakeCXXCompilerId.cpp
+Link:
+  C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\bin\HostX64\x64\link.exe /ERRORREPORT:QUEUE /OUT:".\CompilerIdCXX.exe" /INCREMENTAL:NO /NOLOGO kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /MANIFEST /MANIFESTUAC:"level='asInvoker' uiAccess='false'" /manifest:embed /PDB:".\CompilerIdCXX.pdb" /SUBSYSTEM:CONSOLE /TLBID:1 /DYNAMICBASE /NXCOMPAT /IMPLIB:".\CompilerIdCXX.lib" /MACHINE:X64 Debug\CMakeCXXCompilerId.obj
+  CompilerIdCXX.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\3.16.0-rc3\CompilerIdCXX\.\CompilerIdCXX.exe
+PostBuildEvent:
+  for %%i in (cl.exe) do @echo CMAKE_CXX_COMPILER=%%~$PATH:i
+  :VCEnd
+  CMAKE_CXX_COMPILER=C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\VC\Tools\MSVC\14.26.28801\bin\Hostx64\x64\cl.exe
+FinalizeBuildStatus:
+  Deleting file "Debug\CompilerIdCXX.tlog\unsuccessfulbuild".
+  Touching "Debug\CompilerIdCXX.tlog\CompilerIdCXX.lastbuildstate".
+Done Building Project "C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\3.16.0-rc3\CompilerIdCXX\CompilerIdCXX.vcxproj" (default targets).
+
+Build succeeded.
+    0 Warning(s)
+    0 Error(s)
+
+Time Elapsed 00:00:00.88
+
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.exe"
+
+Compilation of the CXX compiler identification source "CMakeCXXCompilerId.cpp" produced "CompilerIdCXX.vcxproj"
+
+The CXX compiler identification is MSVC, found in "C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/3.16.0-rc3/CompilerIdCXX/CompilerIdCXX.exe"
+
+Determining if the C compiler works passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_5c034.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.26.28806 for x64
+  testCCompiler.c
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_5c034.dir\Debug\\" /Fd"cmTC_5c034.dir\Debug\vc142.pdb" /Gd /TC /errorReport:queue "C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\testCCompiler.c"
+  cmTC_5c034.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_5c034.exe
+
+
+
+Detecting C compiler ABI info compiled with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_e564e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.26.28806 for x64
+  CMakeCCompilerABI.c
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /Fo"cmTC_e564e.dir\Debug\\" /Fd"cmTC_e564e.dir\Debug\vc142.pdb" /Gd /TC /errorReport:queue "C:\Program Files\CMake\share\cmake-3.16\Modules\CMakeCCompilerABI.c"
+  cmTC_e564e.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_e564e.exe
+
+
+
+Determining if the CXX compiler works passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_cf14f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.26.28806 for x64
+  testCXXCompiler.cxx
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_cf14f.dir\Debug\\" /Fd"cmTC_cf14f.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\testCXXCompiler.cxx"
+  cmTC_cf14f.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_cf14f.exe
+
+
+
+Detecting CXX compiler ABI info compiled with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_7f61d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  Microsoft (R) C/C++ Optimizing Compiler Version 19.26.28806 for x64
+  CMakeCXXCompilerABI.cpp
+  Copyright (C) Microsoft Corporation.  All rights reserved.
+  cl /c /Zi /W3 /WX- /diagnostics:column /Od /Ob0 /D WIN32 /D _WINDOWS /D "CMAKE_INTDIR=\"Debug\"" /D _MBCS /Gm- /EHsc /RTC1 /MDd /GS /fp:precise /Zc:wchar_t /Zc:forScope /Zc:inline /GR /Fo"cmTC_7f61d.dir\Debug\\" /Fd"cmTC_7f61d.dir\Debug\vc142.pdb" /Gd /TP /errorReport:queue "C:\Program Files\CMake\share\cmake-3.16\Modules\CMakeCXXCompilerABI.cpp"
+  cmTC_7f61d.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_7f61d.exe
+
+
+
+Determining if the include file sys/types.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_5f693.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_5f693.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_5f693.exe
+
+
+
+Determining if the include file stdint.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_6f330.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_6f330.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_6f330.exe
+
+
+
+Determining if the include file stddef.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_4d8db.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_4d8db.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_4d8db.exe
+
+
+
+Determining size of long passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_b3ea3.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  SIZEOF_LONG.c
+  cmTC_b3ea3.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_b3ea3.exe
+
+
+
+Determining size of long long passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_a8375.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  SIZEOF_LONG_LONG.c
+  cmTC_a8375.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_a8375.exe
+
+
+
+Performing C SOURCE FILE Test HAVE_INLINE succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_eff95.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+  cmTC_eff95.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_eff95.exe
+
+
+Source file was:
+inline void foo(void) { }
+                             int main() {return 0;}
+Performing C SOURCE FILE Test HAVE_STRUCT_TIMESPEC succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_e712a.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+  cmTC_e712a.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_e712a.exe
+
+
+Source file was:
+
+#include <time.h>
+
+int main()
+{
+  (void)sizeof(((struct timespec *)0)->tv_sec);
+  return 0;
+}
+
+Performing C SOURCE FILE Test HAVE_C99_BOOL succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_e1b6e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(1,26): warning C4100: 'argv': unreferenced formal parameter [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_e1b6e.vcxproj]
+  cmTC_e1b6e.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_e1b6e.exe
+
+
+Source file was:
+int main(int argc, char *argv[])
+ {
+     volatile _Bool ret;
+     ret = (argc > 1) ? 1 : 0;
+     return ret ? -1 : 0;
+ }
+Performing C SOURCE FILE Test HAVE___BUILTIN_ASSUME_ALIGNED succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_e258f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(5): warning C4700: uninitialized local variable 'ptr' used [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_e258f.vcxproj]
+  cmTC_e258f.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_e258f.exe
+
+
+Source file was:
+
+int main()
+{
+    float *ptr;
+    ptr = __builtin_assume_aligned(ptr, 16);
+    return 0;
+}
+Determining if the include file stdbool.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_99b03.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_99b03.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_99b03.exe
+
+
+
+Determining if the include file malloc.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_db9b6.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_db9b6.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_db9b6.exe
+
+
+
+Determining if the include file intrin.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_ef8ae.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_ef8ae.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_ef8ae.exe
+
+
+
+Determining if the include file fenv.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_643ad.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_643ad.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_643ad.exe
+
+
+
+Determining if the include file float.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_ef011.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_ef011.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_ef011.exe
+
+
+
+Determining if the include file guiddef.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_2185f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_2185f.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_2185f.exe
+
+
+
+Performing C SOURCE FILE Test HAVE_CPUID_INTRINSIC succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_0425b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+  cmTC_0425b.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_0425b.exe
+
+
+Source file was:
+#include <intrin.h>
+        int main()
+        {
+            int regs[4];
+            __cpuid(regs, 0);
+            return regs[0];
+        }
+Performing C SOURCE FILE Test HAVE_BITSCANFORWARD64_INTRINSIC succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_5fb8b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+  cmTC_5fb8b.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_5fb8b.exe
+
+
+Source file was:
+#include <intrin.h>
+        int main()
+        {
+            unsigned long idx = 0;
+            _BitScanForward64(&idx, 1);
+            return idx;
+        }
+Performing C SOURCE FILE Test HAVE_BITSCANFORWARD_INTRINSIC succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_06dee.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+  cmTC_06dee.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_06dee.exe
+
+
+Source file was:
+#include <intrin.h>
+        int main()
+        {
+            unsigned long idx = 0;
+            _BitScanForward(&idx, 1);
+            return idx;
+        }
+Determining if the _aligned_malloc exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_c3b7f.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_c3b7f.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_c3b7f.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <malloc.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _aligned_malloc
+  return ((int*)(&_aligned_malloc))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the lrintf exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_26eb9.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_26eb9.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_26eb9.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef lrintf
+  return ((int*)(&lrintf))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the modff exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_91224.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_91224.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_91224.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef modff
+  return ((int*)(&modff))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the log2f exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_88d0d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_88d0d.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_88d0d.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef log2f
+  return ((int*)(&log2f))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the cbrtf exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_f4f8e.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_f4f8e.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_f4f8e.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef cbrtf
+  return ((int*)(&cbrtf))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the _controlfp exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_8ed61.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_8ed61.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_8ed61.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <float.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef _controlfp
+  return ((int*)(&_controlfp))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the function stat exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_bc3ab.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+  cmTC_bc3ab.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_bc3ab.exe
+
+
+
+Determining if the function strtof exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_3677d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+  cmTC_3677d.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_3677d.exe
+
+
+
+Determining if the function _stricmp exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_ac0c3.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+  cmTC_ac0c3.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_ac0c3.exe
+
+
+
+Determining if the function _strnicmp exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_4fd96.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckFunctionExists.c
+  cmTC_4fd96.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_4fd96.exe
+
+
+
+Determining if the strnlen exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_4ad65.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_4ad65.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_4ad65.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <string.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef strnlen
+  return ((int*)(&strnlen))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the snprintf exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_8c087.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_8c087.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_8c087.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <stdio.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef snprintf
+  return ((int*)(&snprintf))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the isfinite exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_acf2b.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_acf2b.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_acf2b.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef isfinite
+  return ((int*)(&isfinite))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the isnan exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_2f6eb.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_2f6eb.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_2f6eb.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <math.h>
+
+int main(int argc, char** argv)
+{
+  (void)argv;
+#ifndef isnan
+  return ((int*)(&isnan))[argc];
+#else
+  (void)argc;
+  return 0;
+#endif
+}
+Determining if the include file windows.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_d3837.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_d3837.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_d3837.exe
+
+
+
+Determining if the include file xmmintrin.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_cda41.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_cda41.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_cda41.exe
+
+
+
+Determining if the include file emmintrin.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_81641.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_81641.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_81641.exe
+
+
+
+Determining if the include file pmmintrin.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_06422.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_06422.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_06422.exe
+
+
+
+Determining if the include file smmintrin.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_30ba2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_30ba2.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_30ba2.exe
+
+
+
+Determining if files windows.h;mmsystem.h exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_fd10c.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  HAVE_MMSYSTEM_H.c
+  cmTC_fd10c.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_fd10c.exe
+
+
+
+Determining if the include file mmdeviceapi.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_6aa82.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_6aa82.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_6aa82.exe
+
+
+
+Determining if files inttypes.h exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_a514d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  INCLUDE_INTTYPES_H.c
+  cmTC_a514d.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_a514d.exe
+
+
+
+Determining if files stdint.h exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_4d363.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  INCLUDE_STDINT_H.c
+  cmTC_4d363.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_4d363.exe
+
+
+
+Determining if files sys/types.h exist passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_fe8ab.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  INCLUDE_SYS_TYPES_H.c
+  cmTC_fe8ab.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_fe8ab.exe
+
+
+
+Performing C SOURCE FILE Test HAVE_WIN32_CC succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_2ac17.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(3,31): warning C4100: 'argv': unreferenced formal parameter [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_2ac17.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(3,18): warning C4100: 'argc': unreferenced formal parameter [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_2ac17.vcxproj]
+  cmTC_2ac17.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_2ac17.exe
+
+
+Source file was:
+
+    #include <windows.h>
+    int main(int argc, char **argv) { }
+Performing C SOURCE FILE Test HAVE_XINPUT_H succeeded with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_18308.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  src.c
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(4,35): warning C4100: 'argv': unreferenced formal parameter [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_18308.vcxproj]
+C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\src.c(4,22): warning C4100: 'argc': unreferenced formal parameter [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_18308.vcxproj]
+  cmTC_18308.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_18308.exe
+
+
+Source file was:
+
+        #include <windows.h>
+        #include <xinput.h>
+        int main(int argc, char **argv) { }
+Determining if the include file d3d9.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_76b56.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_76b56.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_76b56.exe
+
+
+
+Determining if the include file d3d11_1.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_0ffb3.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(3306,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(3311,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(3403,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(3759,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(3764,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(3823,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(4328,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(4656,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(10374,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(11229,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(11394,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d11.h(11566,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d10.h(2735,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d10.h(2740,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d10.h(2809,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d10.h(2960,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d10.h(2965,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d10.h(3024,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d10.h(3216,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\d3d10_1.h(329,12): warning C4201: nonstandard extension used: nameless struct/union [C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\cmTC_0ffb3.vcxproj]
+  cmTC_0ffb3.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_0ffb3.exe
+
+
+
+Determining if the include file ddraw.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_cb7e2.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_cb7e2.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_cb7e2.exe
+
+
+
+Determining if the include file dsound.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_e030d.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_e030d.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_e030d.exe
+
+
+
+Determining if the include file dinput.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_c0163.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.18362.0\um\dinput.h: DIRECTINPUT_VERSION undefined. Defaulting to version 0x0800
+  cmTC_c0163.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_c0163.exe
+
+
+
+Determining if the include file dxgi.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_885ce.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_885ce.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_885ce.exe
+
+
+
+Determining if the include file audioclient.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_166aa.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_166aa.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_166aa.exe
+
+
+
+Determining if the include file endpointvolume.h exists passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_a7113.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckIncludeFile.c
+  cmTC_a7113.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\CMakeFiles\CMakeTmp\Debug\cmTC_a7113.exe
+
+
+

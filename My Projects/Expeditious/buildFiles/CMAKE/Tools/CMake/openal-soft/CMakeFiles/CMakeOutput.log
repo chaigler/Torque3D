@@ -1,0 +1,22 @@
+Determining if the waveOutOpen exist in winmm passed with the following output:
+Change Dir: C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/Tools/CMake/openal-soft/CMakeFiles/CMakeTmp
+
+Run Build Command(s):C:/Program Files (x86)/Microsoft Visual Studio/2019/Community/MSBuild/Current/Bin/MSBuild.exe cmTC_2d0a6.vcxproj /p:Configuration=Debug /p:Platform=x64 /p:VisualStudioVersion=16.0 /v:m && Microsoft (R) Build Engine version 16.6.0+5ff7b0c9e for .NET Framework
+Copyright (C) Microsoft Corporation. All rights reserved.
+
+  CheckSymbolExists.c
+  cmTC_2d0a6.vcxproj -> C:\Users\Chris\Google Drive\devBackup\Torque3D\My Projects\Expeditious\buildFiles\CMAKE\Tools\CMake\openal-soft\CMakeFiles\CMakeTmp\Debug\cmTC_2d0a6.exe
+
+
+File C:/Users/Chris/Google Drive/devBackup/Torque3D/My Projects/Expeditious/buildFiles/CMAKE/Tools/CMake/openal-soft/CMakeFiles/CMakeTmp/CheckSymbolExists.c:
+/* */
+#include <windows.h>
+#include <mmsystem.h>
+
+void cmakeRequireSymbol(int dummy,...){(void)dummy;}
+int main()
+{
+  cmakeRequireSymbol(0,&waveOutOpen);
+  return 0;
+}
+
