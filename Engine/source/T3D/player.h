@@ -51,7 +51,7 @@ class OpenVRTrackedObject;
 
 //----------------------------------------------------------------------------
 
-struct PlayerData: public ShapeBaseData {
+struct PlayerData : public ShapeBaseData {
    typedef ShapeBaseData Parent;
    enum Constants {
       RecoverDelayBits = 7,
@@ -65,7 +65,7 @@ struct PlayerData: public ShapeBaseData {
 
    /// Render shadows while in first person when 
    /// renderFirstPerson is disabled.
-   bool firstPersonShadows; 
+   bool firstPersonShadows;
 
    StringTableEntry  imageAnimPrefix;                             ///< Passed along to mounted images to modify
                                                                   ///  animation sequences played in third person. [optional]
@@ -130,17 +130,6 @@ struct PlayerData: public ShapeBaseData {
    F32 maxJumpSpeed;          ///< Maximum speed before the player can no longer jump
    F32 jumpSurfaceAngle;      ///< Angle from vertical in degrees where the player can jump
    S32 jumpDelay;             ///< Delay time in ticks between jumps
-   // CH: Added double jumping
-   bool doubleJumpEnabled;
-   S32 doubleJumpDelay;
-   F32 doubleJumpForce;
-   F32 doubleJumpMinHeight;
-   F32 doubleJumpMaxHeight;
-   // CH: Added wall jumping
-   S32 wallJumpDelay;
-   F32 wallJumpForce;
-   F32 wallJumpForceZScalar;
-   S32 wallJumpGravityDelay;
 
    // Sprinting
    F32 sprintForce;                 ///< Force used to accelerate player
@@ -239,7 +228,7 @@ struct PlayerData: public ShapeBaseData {
    struct ActionAnimationDef {
       const char* name;       ///< Sequence name
       struct Vector {
-         F32 x,y,z;
+         F32 x, y, z;
       } dir;                  ///< Default direction
    };
    struct ActionAnimation {
@@ -325,7 +314,7 @@ struct PlayerData: public ShapeBaseData {
    /// All of the data relating to environmental effects
    /// @{
 
-   ParticleEmitterData * footPuffEmitter;
+   ParticleEmitterData* footPuffEmitter;
    S32 footPuffID;
    S32 footPuffNumParts;
    F32 footPuffRadius;
@@ -333,7 +322,7 @@ struct PlayerData: public ShapeBaseData {
    DecalData* decalData;
    S32 decalID;
 
-   ParticleEmitterData * dustEmitter;
+   ParticleEmitterData* dustEmitter;
    S32 dustID;
 
    SplashData* splash;
@@ -365,8 +354,8 @@ struct PlayerData: public ShapeBaseData {
    //
    DECLARE_CONOBJECT(PlayerData);
    PlayerData();
-   bool preload(bool server, String &errorStr);
-   void getGroundInfo(TSShapeInstance*,TSThread*,ActionAnimation*);
+   bool preload(bool server, String& errorStr);
+   void getGroundInfo(TSShapeInstance*, TSThread*, ActionAnimation*);
    bool isTableSequence(S32 seq);
    bool isJumpAction(U32 action);
 
@@ -376,24 +365,24 @@ struct PlayerData: public ShapeBaseData {
 
    /// @name Callbacks
    /// @{
-   DECLARE_CALLBACK( void, onPoseChange, ( Player* obj, const char* oldPose, const char* newPose ) );
-   DECLARE_CALLBACK( void, onStartSwim, ( Player* obj ) );
-   DECLARE_CALLBACK( void, onStopSwim, ( Player* obj ) );
-   DECLARE_CALLBACK( void, onStartSprintMotion, ( Player* obj ) );
-   DECLARE_CALLBACK( void, onStopSprintMotion, ( Player* obj ) );
-   DECLARE_CALLBACK( void, doDismount, ( Player* obj ) );
-   DECLARE_CALLBACK( void, onEnterLiquid, ( Player* obj, F32 coverage, const char* type ) );
-   DECLARE_CALLBACK( void, onLeaveLiquid, ( Player* obj, const char* type ) );
-   DECLARE_CALLBACK( void, animationDone, ( Player* obj ) );
-   DECLARE_CALLBACK( void, onEnterMissionArea, ( Player* obj ) );
-   DECLARE_CALLBACK( void, onLeaveMissionArea, ( Player* obj ) );
+   DECLARE_CALLBACK(void, onPoseChange, (Player* obj, const char* oldPose, const char* newPose));
+   DECLARE_CALLBACK(void, onStartSwim, (Player* obj));
+   DECLARE_CALLBACK(void, onStopSwim, (Player* obj));
+   DECLARE_CALLBACK(void, onStartSprintMotion, (Player* obj));
+   DECLARE_CALLBACK(void, onStopSprintMotion, (Player* obj));
+   DECLARE_CALLBACK(void, doDismount, (Player* obj));
+   DECLARE_CALLBACK(void, onEnterLiquid, (Player* obj, F32 coverage, const char* type));
+   DECLARE_CALLBACK(void, onLeaveLiquid, (Player* obj, const char* type));
+   DECLARE_CALLBACK(void, animationDone, (Player* obj));
+   DECLARE_CALLBACK(void, onEnterMissionArea, (Player* obj));
+   DECLARE_CALLBACK(void, onLeaveMissionArea, (Player* obj));
    /// @}
 };
 
 
 //----------------------------------------------------------------------------
 
-class Player: public ShapeBase
+class Player : public ShapeBase
 {
    typedef ShapeBase Parent;
 
@@ -414,11 +403,11 @@ protected:
 
    /// Bit masks for different types of events
    enum MaskBits {
-      ActionMask   = Parent::NextFreeMask << 0,
-      MoveMask     = Parent::NextFreeMask << 1,
-      ImpactMask   = Parent::NextFreeMask << 2,
-      TriggerMask      = Parent::NextFreeMask << 3,
-      NextFreeMask     = Parent::NextFreeMask << 4
+      ActionMask = Parent::NextFreeMask << 0,
+      MoveMask = Parent::NextFreeMask << 1,
+      ImpactMask = Parent::NextFreeMask << 2,
+      TriggerMask = Parent::NextFreeMask << 3,
+      NextFreeMask = Parent::NextFreeMask << 4
    };
 
    SimObjectPtr<ParticleEmitter> mSplashEmitter[PlayerData::NUM_SPLASH_EMITTERS];
@@ -437,15 +426,15 @@ protected:
       VectorF posVec;
       VectorF rotVec;
       VectorF headVec;
-     /// @}
+      /// @}
 
-     /// @name Warp data
-     /// @{
+      /// @name Warp data
+      /// @{
 
       S32 warpTicks;
       Point3F warpOffset;
       Point3F rotOffset;
-     /// @}
+      /// @}
    };
    StateDelta mDelta;                ///< Used for interpolation on the client.  @see StateDelta
    S32 mPredictionCount;            ///< Number of ticks to predict
@@ -476,11 +465,8 @@ protected:
    };
    ActionState mState;              ///< What is the player doing? @see ActionState
    bool mFalling;                   ///< Falling in mid-air?
-   S32 mJumpDelay;                  ///< Delay till next jump
-   // CH: Added wall jumping
-   S32 mWallJumpDelay;              ///< Delay till next wall jump
-   S32 mWallJumpGravityDelay;       ///< Delay till gravity resets
-   
+   S32 mJumpDelay;                  ///< Delay till next jump   
+
    Pose  mPose;
    bool  mAllowJumping;
    bool  mAllowJetJumping;
@@ -488,11 +474,8 @@ protected:
    bool  mAllowCrouching;
    bool  mAllowProne;
    bool  mAllowSwimming;
-   
-   S32 mContactTimer;               ///< Ticks since last contact
 
-   // CH: Added double jumping
-   bool mDoubleJumped;
+   S32 mContactTimer;               ///< Ticks since last contact
 
    Point3F mJumpSurfaceNormal;      ///< Normal of the surface the player last jumped on
    U32 mJumpSurfaceLastContact;     ///< How long it's been since the player landed (ticks)
@@ -549,17 +532,17 @@ protected:
    SimObjectPtr<OpenVRTrackedObject> mControllers[2];
 #endif
 
-   struct ContactInfo 
+   struct ContactInfo
    {
       bool contacted, jump, run;
-      SceneObject *contactObject;
+      SceneObject* contactObject;
       VectorF  contactNormal;
 
       void clear()
       {
-         contacted=jump=run=false; 
-         contactObject = NULL; 
-         contactNormal.set(1,1,1);
+         contacted = jump = run = false;
+         contactObject = NULL;
+         contactNormal.set(1, 1, 1);
       }
 
       ContactInfo() { clear(); }
@@ -572,27 +555,27 @@ protected:
       VectorF  rotate;
       VectorF  curNormal;
       F32      curSink;
-      void     clear()           {dMemset(this, 0, sizeof(*this)); initFall();}
-      VectorF  getPosAdd()       {VectorF ret(posAdd); posAdd.set(0,0,0); return ret;}
-      bool     haveVelocity()    {return posAdd.x != 0 || posAdd.y != 0;}
-      void     initFall()        {curNormal.set(0,0,1); curSink = 0;}
-      Death()                    {clear();}
+      void     clear() { dMemset(this, 0, sizeof(*this)); initFall(); }
+      VectorF  getPosAdd() { VectorF ret(posAdd); posAdd.set(0, 0, 0); return ret; }
+      bool     haveVelocity() { return posAdd.x != 0 || posAdd.y != 0; }
+      void     initFall() { curNormal.set(0, 0, 1); curSink = 0; }
+      Death() { clear(); }
       MatrixF* fallToGround(F32 adjust, const Point3F& pos, F32 zrot, F32 boxRad);
    } mDeath;
 
-   PhysicsPlayer *mPhysicsRep;
+   PhysicsPlayer* mPhysicsRep;
 
    // First person mounted image shapes
-   TSShapeInstance*  mShapeFPInstance[ShapeBase::MaxMountedImages];
-   TSThread *mShapeFPAmbientThread[ShapeBase::MaxMountedImages];
-   TSThread *mShapeFPVisThread[ShapeBase::MaxMountedImages];
-   TSThread *mShapeFPAnimThread[ShapeBase::MaxMountedImages];
-   TSThread *mShapeFPFlashThread[ShapeBase::MaxMountedImages];
-   TSThread *mShapeFPSpinThread[ShapeBase::MaxMountedImages];
+   TSShapeInstance* mShapeFPInstance[ShapeBase::MaxMountedImages];
+   TSThread* mShapeFPAmbientThread[ShapeBase::MaxMountedImages];
+   TSThread* mShapeFPVisThread[ShapeBase::MaxMountedImages];
+   TSThread* mShapeFPAnimThread[ShapeBase::MaxMountedImages];
+   TSThread* mShapeFPFlashThread[ShapeBase::MaxMountedImages];
+   TSThread* mShapeFPSpinThread[ShapeBase::MaxMountedImages];
 
-   
-  public:
-  
+
+public:
+
    // New collision
    OrthoBoxConvex mConvex;
    Box3F          mWorkingQueryBox;
@@ -600,11 +583,11 @@ protected:
    /// Standing / Crouched / Prone or Swimming   
    Pose getPose() const { return mPose; }
    virtual const char* getPoseName() const;
-   
+
    /// Setting this from script directly might not actually work,
    /// This is really just a helper for the player class so that its bounding box
    /// will get resized appropriately when the pose changes
-   void setPose( Pose pose );
+   void setPose(Pose pose);
 
    PhysicsPlayer* getPhysicsRep() const { return mPhysicsRep; }
 
@@ -612,10 +595,10 @@ protected:
    void setControllers(Vector<OpenVRTrackedObject*> controllerList);
 #endif
 
-  protected:
+protected:
    virtual void reSkin();
 
-   void setState(ActionState state, U32 ticks=0);
+   void setState(ActionState state, U32 ticks = 0);
    void updateState();
 
 
@@ -623,12 +606,12 @@ protected:
    bool mJetting;
 
    ///Update the movement
-   virtual void updateMove(const Move *move);
+   virtual void updateMove(const Move* move);
 
    ///Interpolate movement
-   Point3F _move( const F32 travelTime, Collision *outCol );
-   F32 _doCollisionImpact( const Collision *collision, bool fallingCollision);
-   void _handleCollision( const Collision &collision );
+   Point3F _move(const F32 travelTime, Collision* outCol);
+   F32 _doCollisionImpact(const Collision* collision, bool fallingCollision);
+   void _handleCollision(const Collision& collision);
    virtual bool updatePos(const F32 travelTime = TickSec);
 
    ///Update head animation
@@ -637,38 +620,38 @@ protected:
    ///Update other animations
    void updateAnimation(F32 dt);
    void updateAnimationTree(bool firstPerson);
-   bool step(Point3F *pos,F32 *maxStep,F32 time);
+   bool step(Point3F* pos, F32* maxStep, F32 time);
 
    ///See if the player is still in the mission area
    void checkMissionArea();
 
    virtual U32 getArmAction() const { return mArmAnimation.action; }
    virtual bool setArmThread(U32 action);
-   virtual void setActionThread(U32 action,bool forward,bool hold = false,bool wait = false,bool fsp = false, bool forceSet = false);
+   virtual void setActionThread(U32 action, bool forward, bool hold = false, bool wait = false, bool fsp = false, bool forceSet = false);
    virtual void updateActionThread();
-   virtual void pickBestMoveAction(U32 startAnim, U32 endAnim, U32 * action, bool * forward) const;
+   virtual void pickBestMoveAction(U32 startAnim, U32 endAnim, U32* action, bool* forward) const;
    virtual void pickActionAnimation();
 
    /// @name Mounted objects
    /// @{
-   virtual void onUnmount( SceneObject *obj, S32 node );
+   virtual void onUnmount(SceneObject* obj, S32 node);
    virtual void unmount();
    /// @}
 
-   void setPosition(const Point3F& pos,const Point3F& viewRot);
-   void setRenderPosition(const Point3F& pos,const Point3F& viewRot,F32 dt=-1);
-   void _findContact( SceneObject **contactObject, VectorF *contactNormal, Vector<SceneObject*> *outOverlapObjects );
-   void findContact( bool *run, bool *jump, VectorF *contactNormal );
+   void setPosition(const Point3F& pos, const Point3F& viewRot);
+   void setRenderPosition(const Point3F& pos, const Point3F& viewRot, F32 dt = -1);
+   void _findContact(SceneObject** contactObject, VectorF* contactNormal, Vector<SceneObject*>* outOverlapObjects);
+   void findContact(bool* run, bool* jump, VectorF* contactNormal);
 
    void buildImagePrefixPaths(String* prefixPaths);
    S32 findPrefixSequence(String* prefixPaths, const String& baseSeq);
    S32 convertActionToImagePrefix(U32 action);
 
    virtual void onImage(U32 imageSlot, bool unmount);
-   virtual void onImageRecoil(U32 imageSlot,ShapeBaseImageData::StateData::RecoilState);
+   virtual void onImageRecoil(U32 imageSlot, ShapeBaseImageData::StateData::RecoilState);
    virtual void onImageStateAnimation(U32 imageSlot, const char* seqName, bool direction, bool scaleToState, F32 stateTimeOutValue);
    virtual const char* getImageAnimPrefix(U32 imageSlot, S32 imageShapeIndex);
-   virtual void onImageAnimThreadChange(U32 imageSlot, S32 imageShapeIndex, ShapeBaseImageData::StateData* lastState, const char* anim, F32 pos, F32 timeScale, bool reset=false);
+   virtual void onImageAnimThreadChange(U32 imageSlot, S32 imageShapeIndex, ShapeBaseImageData::StateData* lastState, const char* anim, F32 pos, F32 timeScale, bool reset = false);
    virtual void onImageAnimThreadUpdate(U32 imageSlot, S32 imageShapeIndex, F32 dt);
 
    virtual void updateDamageLevel();
@@ -677,20 +660,20 @@ protected:
    void setControllingClient(GameConnection* client);
 
    void calcClassRenderData();
-   
+
    /// Play sound for foot contact.
    ///
    /// @param triggeredLeft If true, left foot hit; right otherwise.
    /// @param contactMaterial Material onto which the player stepped; may be NULL.
    /// @param contactObject Object onto which the player stepped; may be NULL.
-   void playFootstepSound( bool triggeredLeft, Material* contactMaterial, SceneObject* contactObject );
-   
+   void playFootstepSound(bool triggeredLeft, Material* contactMaterial, SceneObject* contactObject);
+
    /// Play an impact sound.
    void playImpactSound();
 
    /// Are we in the process of dying?
    bool inDeathAnim();
-   F32  deathDelta(Point3F &delta);
+   F32  deathDelta(Point3F& delta);
    void updateDeathOffsets();
    bool inSittingAnim();
 
@@ -698,10 +681,10 @@ protected:
    /// @{
 
    void updateSplash();                             ///< Update the splash effect
-   void updateFroth( F32 dt );                      ///< Update any froth
-   void updateWaterSounds( F32 dt );                ///< Update water sounds
-   void createSplash( Point3F &pos, F32 speed );    ///< Creates a splash
-   bool collidingWithWater( Point3F &waterHeight ); ///< Are we colliding with water?
+   void updateFroth(F32 dt);                      ///< Update any froth
+   void updateWaterSounds(F32 dt);                ///< Update water sounds
+   void createSplash(Point3F& pos, F32 speed);    ///< Creates a splash
+   bool collidingWithWater(Point3F& waterHeight); ///< Are we colliding with water?
    /// @}
 
    void disableHeadZCalc() { mUseHeadZCalc = false; }
@@ -717,28 +700,28 @@ public:
    /// @name Transforms
    /// @{
 
-   void setTransform(const MatrixF &mat);
+   void setTransform(const MatrixF& mat);
    void getEyeTransform(MatrixF* mat);
    void getEyeBaseTransform(MatrixF* mat, bool includeBank);
    void getRenderEyeTransform(MatrixF* mat);
    void getRenderEyeBaseTransform(MatrixF* mat, bool includeBank);
-   void getCameraParameters(F32 *min, F32 *max, Point3F *offset, MatrixF *rot);
-   void getMuzzleTransform(U32 imageSlot,MatrixF* mat);
-   void getRenderMuzzleTransform(U32 imageSlot,MatrixF* mat);   
+   void getCameraParameters(F32* min, F32* max, Point3F* offset, MatrixF* rot);
+   void getMuzzleTransform(U32 imageSlot, MatrixF* mat);
+   void getRenderMuzzleTransform(U32 imageSlot, MatrixF* mat);
 
-   virtual void getMuzzleVector(U32 imageSlot,VectorF* vec);
+   virtual void getMuzzleVector(U32 imageSlot, VectorF* vec);
    /// @}
 
    F32 getSpeed() const;
    Point3F getVelocity() const;
    void setVelocity(const VectorF& vel);
    /// Apply an impulse at the given point, with magnitude/direction of vec
-   void applyImpulse(const Point3F& pos,const VectorF& vec);
+   void applyImpulse(const Point3F& pos, const VectorF& vec);
    /// Get the rotation of the player
    const Point3F& getRotation() { return mRot; }
    /// Get the rotation of the head of the player
    const Point3F& getHeadRotation() { return mHead; }
-   void getDamageLocation(const Point3F& in_rPos, const char *&out_rpVert, const char *&out_rpQuad);
+   void getDamageLocation(const Point3F& in_rPos, const char*& out_rpVert, const char*& out_rpQuad);
 
    void allowAllPoses();
    void allowJumping(bool state) { mAllowJumping = state; }
@@ -756,12 +739,12 @@ public:
    bool canProne();
    bool canSprint();
    bool haveContact() const { return !mContactTimer; }         ///< Is it in contact with something
-   void getMuzzlePointAI( U32 imageSlot, Point3F *point );
+   void getMuzzlePointAI(U32 imageSlot, Point3F* point);
    F32 getMaxForwardVelocity() const { return (mDataBlock != NULL ? mDataBlock->maxForwardSpeed : 0); }
 
    virtual bool    isDisplacable() const;
    virtual Point3F getMomentum() const;
-   virtual void    setMomentum(const Point3F &momentum);
+   virtual void    setMomentum(const Point3F& momentum);
    virtual bool    displaceObject(const Point3F& displaceVector);
    virtual bool    getAIMove(Move*);
 
@@ -770,39 +753,39 @@ public:
    //
    bool onAdd();
    void onRemove();
-   bool onNewDataBlock( GameBaseData *dptr, bool reload );
+   bool onNewDataBlock(GameBaseData* dptr, bool reload);
    void onScaleChanged();
    Box3F mScaledBox;
 
    // Animation
    const char* getStateName();
-   bool setActionThread(const char* sequence,bool hold,bool wait,bool fsp = false);
+   bool setActionThread(const char* sequence, bool hold, bool wait, bool fsp = false);
    const String& getArmThread() const;
    bool setArmThread(const char* sequence);
 
    // Object control
-   void setControlObject(ShapeBase *obj);
+   void setControlObject(ShapeBase* obj);
    ShapeBase* getControlObject();
-   
+
    //
    void updateWorkingCollisionSet();
-   virtual void processTick(const Move *move);
+   virtual void processTick(const Move* move);
    void interpolateTick(F32 delta);
    void advanceTime(F32 dt);
-   bool castRay(const Point3F &start, const Point3F &end, RayInfo* info);
-   bool buildPolyList(PolyListContext context, AbstractPolyList* polyList, const Box3F &box, const SphereF &sphere);
+   bool castRay(const Point3F& start, const Point3F& end, RayInfo* info);
+   bool buildPolyList(PolyListContext context, AbstractPolyList* polyList, const Box3F& box, const SphereF& sphere);
    void buildConvex(const Box3F& box, Convex* convex);
    bool isControlObject();
 
-   void onCameraScopeQuery(NetConnection *cr, CameraScopeQuery *);
-   void writePacketData(GameConnection *conn, BitStream *stream);
-   void readPacketData (GameConnection *conn, BitStream *stream);
-   U32  packUpdate  (NetConnection *conn, U32 mask, BitStream *stream);
-   void unpackUpdate(NetConnection *conn,           BitStream *stream);
+   void onCameraScopeQuery(NetConnection* cr, CameraScopeQuery*);
+   void writePacketData(GameConnection* conn, BitStream* stream);
+   void readPacketData(GameConnection* conn, BitStream* stream);
+   U32  packUpdate(NetConnection* conn, U32 mask, BitStream* stream);
+   void unpackUpdate(NetConnection* conn, BitStream* stream);
 
-   virtual void prepRenderImage( SceneRenderState* state );
-   virtual void renderConvex( ObjectRenderInst *ri, SceneRenderState *state, BaseMatInstance *overrideMat );   
-   virtual void renderMountedImage( U32 imageSlot, TSRenderState &rstate, SceneRenderState *state );
+   virtual void prepRenderImage(SceneRenderState* state);
+   virtual void renderConvex(ObjectRenderInst* ri, SceneRenderState* state, BaseMatInstance* overrideMat);
+   virtual void renderMountedImage(U32 imageSlot, TSRenderState& rstate, SceneRenderState* state);
 private:
    static void  afx_consoleInit();
    void         afx_init();
@@ -810,7 +793,7 @@ private:
    void         afx_unpackUpdate(NetConnection*, BitStream*);
 private:
    static bool  sCorpsesHiddenFromRayCast;
-   
+
 public:
    virtual void restoreAnimation(U32 tag);
    virtual U32 getAnimationID(const char* name);
@@ -818,10 +801,10 @@ public:
    virtual F32 getAnimationDurationByID(U32 anim_id);
    virtual bool isBlendAnimation(const char* name);
    virtual const char* getLastClipName(U32 clip_tag);
-   virtual void unlockAnimation(U32 tag, bool force=false);
+   virtual void unlockAnimation(U32 tag, bool force = false);
    virtual U32 lockAnimation();
    virtual bool isAnimationLocked() const { return ((anim_clip_flags & BLOCK_USER_CONTROL) != 0); }
-   
+
 protected:
    bool         overrideLookAnimation;
    F32          armLookOverridePos;
@@ -845,24 +828,24 @@ private:
    void   process_client_triggers(bool triggeredLeft, bool triggeredRight);
 public:
    enum {
-     // server events
-     PLAYER_MOVE_TRIGGER_0        = BIT(0),
-     PLAYER_MOVE_TRIGGER_1        = BIT(1),
-     PLAYER_MOVE_TRIGGER_2        = BIT(2),
-     PLAYER_MOVE_TRIGGER_3        = BIT(3),
-     PLAYER_MOVE_TRIGGER_4        = BIT(4),
-     PLAYER_MOVE_TRIGGER_5        = BIT(5),
-     PLAYER_LANDING_S_TRIGGER     = BIT(6),
+      // server events
+      PLAYER_MOVE_TRIGGER_0 = BIT(0),
+      PLAYER_MOVE_TRIGGER_1 = BIT(1),
+      PLAYER_MOVE_TRIGGER_2 = BIT(2),
+      PLAYER_MOVE_TRIGGER_3 = BIT(3),
+      PLAYER_MOVE_TRIGGER_4 = BIT(4),
+      PLAYER_MOVE_TRIGGER_5 = BIT(5),
+      PLAYER_LANDING_S_TRIGGER = BIT(6),
 
-     PLAYER_FIRE_S_TRIGGER        = PLAYER_MOVE_TRIGGER_0,
-     PLAYER_FIRE_ALT_S_TRIGGER    = PLAYER_MOVE_TRIGGER_1,
-     PLAYER_JUMP_S_TRIGGER        = BIT(7),
+      PLAYER_FIRE_S_TRIGGER = PLAYER_MOVE_TRIGGER_0,
+      PLAYER_FIRE_ALT_S_TRIGGER = PLAYER_MOVE_TRIGGER_1,
+      PLAYER_JUMP_S_TRIGGER = BIT(7),
 
-     // client events
-     PLAYER_LF_FOOT_C_TRIGGER       = BIT(16),
-     PLAYER_RT_FOOT_C_TRIGGER       = BIT(17),
-     PLAYER_LANDING_C_TRIGGER       = BIT(18),
-     PLAYER_IDLE_C_TRIGGER          = BIT(19),
+      // client events
+      PLAYER_LF_FOOT_C_TRIGGER = BIT(16),
+      PLAYER_RT_FOOT_C_TRIGGER = BIT(17),
+      PLAYER_LANDING_C_TRIGGER = BIT(18),
+      PLAYER_IDLE_C_TRIGGER = BIT(19),
    };
    U32  getClientEventTriggers() const { return fx_c_triggers; }
    U32  getServerEventTriggers() const { return fx_s_triggers; }
@@ -876,7 +859,7 @@ private:
    static U32   unique_movement_tag_counter;
 public:
    void     setMovementSpeedBias(F32 bias);
-   U32      setMovementOverride(F32 bias, const Point3F* mov=0, U32 op=1);
+   U32      setMovementOverride(F32 bias, const Point3F* mov = 0, U32 op = 1);
    void     restoreMovement(U32 tag);
 private:
    S32      footfallDecalOverride;
@@ -884,12 +867,12 @@ private:
    S32      footfallDustOverride;
    bool     noFootfallFX;
 public:
-   void     overrideFootfallFX(bool decals=true, bool sounds=true, bool dust=true);
-   void     restoreFootfallFX(bool decals=true, bool sounds=true, bool dust=true);
+   void     overrideFootfallFX(bool decals = true, bool sounds = true, bool dust = true);
+   void     restoreFootfallFX(bool decals = true, bool sounds = true, bool dust = true);
 };
 
 typedef Player::Pose PlayerPose;
 
-DefineEnumType( PlayerPose );
+DefineEnumType(PlayerPose);
 
 #endif
